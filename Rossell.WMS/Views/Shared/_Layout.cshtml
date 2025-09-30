@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title</title>
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/assets/bootstrap/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/assets/css/style.css">
+    <link rel="stylesheet" href="~/assets/css/jquery-ui.css">
+    <link rel="stylesheet" href="~/assets/css/bootstrap-datepicker.min.css">
+    <script src="~/assets/js/jquery-3.3.1.min.js"></script>
+    <script src="~/assets/js/bootstrap-datepicker.min.js"></script>   
+    <link runat="server" rel="shortcut icon" href="~/assets/images/favicon.ico" type="image/x-icon" />
+</head>
+<body>
+    <nav class="navbar navbar-light navbar-expand-sm fixed-top bg-white clean-navbar">
+        <div class="container">
+            <a class="navbar-brand logo" href="@Url.Action("Move", "DirectMoveSerial")">
+                @ViewBag.CompanyName&nbsp;
+                <span class="badge badge-success">@ViewBag.SystemName</span>
+            </a>
+            <img src="~/assets/images/logo.png" class="embed-responsive" style="width:12%;display:flex;">
+        </div>
+    </nav>
+    <main class="page login-page full-height gradient">
+        <section class="clean-block clean-form dar" style="padding-bottom: 0px;">
+            <div class="container" style="padding: 8px;">
+                @RenderBody()
+                <footer>
+                    <p>&copy; @DateTime.Now.Year – Arisoft</p>
+                </footer>
+            </div>
+        </section>
+    </main>
+    <script src="~/assets/js/jquery-3.3.1.min.js"></script>
+    <script src="~/assets/js/jquery.scannerdetection.js"></script>
+    <script src="~/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/js/jquery.validate.min.js"></script>
+    <script src="~/assets/js/additional-methods.min.js"></script>
+    <script src="~/assets/js/popper.min.js"></script>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

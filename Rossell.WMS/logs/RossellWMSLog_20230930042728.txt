@@ -1,0 +1,22 @@
+--------------------------------------------------------------- Rossell WMS Start 09-30-2023 04:27:28-----------------------------------------------------------------
+MASTER LABEL ID : 5210
+WORKORDER ID : 155733
+SERIAL : 000005210
+ARINVT_ID : 198927
+SOURCE LOCATION : S101A01
+SOURCE FGMULTI ID : 194823
+TARGET LOCATION : 32681
+IS REPACK : True
+
+Successfully called Inventory/Disposition/MasterLabelRepack Web API 
+
+Serial Number After Repack Web API : 000005212
+
+Master Label ID : 5212
+
+Successfully called Inventory/TransactionLocation/MoveToLocationFromMasterLabel Web API 
+
+Successfully called ARS_UTILS.DO_HARDALLOC Package
+
+--------------------------------------------------------------- Rossell WMS End 09-30-2023 04:27:34-----------------------------------------------------------------
+

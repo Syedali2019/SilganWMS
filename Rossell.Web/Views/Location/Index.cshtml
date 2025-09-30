@@ -1,0 +1,116 @@
+﻿
+@{    
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.AntiForgeryToken()
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+<div class="container" style="padding: 8px;">
+    <form class="border rounded" method="post" id="LocationForm">
+        <div class="input-group">
+            <div id="infoMessage" class="alert font" style="display: none;">
+                <p></p>
+            </div>
+        </div>
+        <div class="form-group location-field">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
+                </div>                
+                <input type="text" class="form-control pl-0" id="txtlocation" name="txtLocation" placeholder="Go to Location A" value="Go to Location @ViewBag.Location" disabled>
+                <input type="hidden" id="hdnLocation" name="hdnLocation" value="@ViewBag.Location" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group mb-3">
+                <input type="text" class="input-button-group form-control" id="txtScanLocation" name="txtScanLocation" placeholder="Scan the location" required aria-describedby="basic-addon2">
+                <div class="invalid-feedback">
+                    Please enter a Scan Location
+                </div>
+                <div class="input-group-append">
+                    <input type="submit" value="Go!" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="spinner" style="display:none">
+        <div class="center-div">
+            <div class="inner-div">
+                <div class="loader"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+            $.validator.setDefaults({
+                submitHandler: function () {
+                    var parameters =
+                    {
+                        LocationName: $("#txtScanLocation").val(),
+                        ScanLocation: $("#hdnLocation").val(),
+                    }
+                    $('.spinner').css('display', 'block');
+                    $.ajax({
+                        type: "POST",
+                        url: "/Location/Next",
+                        data: { location: parameters },
+                        cache: false,
+                        success: function (response) {
+                            if (response == true) {
+                                var url = '@Url.Action("Index", "PickInventory")';
+                                window.location.href = url;
+                            }
+                            else if (response == false) {
+                                $('.spinner').css('display', 'none');
+                                $('#infoMessage').addClass('alert-danger');
+                                $('#infoMessage').text('Please Go to the ' + $("#hdnLocation").val() +' location.');
+                                $('#infoMessage').stop();
+                                $('#infoMessage').slideDown();
+                                $('#infoMessage').delay(3000).slideUp("slow");
+                            }
+                            else if (response == -1) {
+                                $('.spinner').css('display', 'none');
+                                var url = '@Url.Action("Index", "Login")';
+                                window.location.href = url;
+                            }
+                        },
+                        failure: function (response) {
+                            //  alert(response.responseText);
+                            $('.spinner').css('display', 'none');
+                        },
+                        error: function (response) {
+                            //alert(response.responseText);
+                            $('.spinner').css('display', 'none');
+                        }
+                    });
+                }
+            });
+        $('#LocationForm').validate({
+                rules: {
+                    LocationName: {
+                        required: true
+                    },
+                },
+                messages: {
+                    LocationName: {
+                        required: "Please Scan Location",
+                        date: "Please Scan Location"
+                    }
+                },
+                errorElement: 'span',
+                errorPlacement: function (error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.input-group').append(error);
+                },
+                highlight: function (element, errorClass, validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
+                }
+            });
+        });
+
+</script>
+

@@ -1,0 +1,232 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content">
+    <div class="card">
+        <form class="w-100 p-0" method="post" id="printerForm">
+            <div class="input-group">
+                <div class="alert font messagealert fixed-top" id="infoMessage" style="display: none;">
+                    <button type="button" class="close" data-dismiss="alert">x</button>
+                    <p></p>
+                </div>
+            </div>
+            <div class="card-header">
+                WMS Options
+            </div>
+
+            <div class="card-body p-2">
+                <div class="custom-button-list list-group" id="myList" role="tablist">
+                    <span class="button-checkbox">
+                        <button type="button" class="list-group-item list-group-item-action mb-2 rounded" data-color="primary" id="btn_DirectMoveSerial" name="btn_DirectMoveSerial" value="1">
+                            Direct Move Serial #
+                            @Html.CheckBox("chk", false, new { id = "chkDirectMoveSerial", @Value = 1, style = "display: none" })
+                        </button>
+                    </span>
+                    <span class="button-checkbox">
+                        <button type="button" class="list-group-item list-group-item-action mb-2 rounded" data-color="primary" id="btn_DirectMoveWO" name="btn_DirectMoveWO" value="2">
+                            Direct Move WO #
+                            @Html.CheckBox("chk", false, new { id = "chkDirectMoveWO", @Value = 2, style = "display: none" })
+                        </button>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group d-flex justify-content-end mb-2 mr-2" id="bottomButton">
+                <input type="submit" id="btnSubmit" name="btnSubmit" value="Next" class="btn btn-secondary btn-sm text-right" />
+            </div>
+        </form>
+
+        <div class="spinner" style="display:none">
+            <div class="center-div">
+                <div class="inner-div">
+                    <div class="loader"></div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            if ($(".card-body").height() > $(window).height()) {
+                $("#bottomButton").addClass('fixed-bottom');
+            }
+            else {
+                $("#bottomButton").removeClass('fixed-bottom');
+            }
+
+            $('.button-checkbox').each(function () {
+                // Settings
+                var $widget = $(this),
+                    $button = $widget.find('button'),
+                    $checkbox = $widget.find('input:checkbox'),
+                    $hidden = $widget.find('input:hidden'),
+                    color = $button.data('color'),
+                    settings = {
+                        on: {
+                            icon: ' fa fa-check-circle mr-2'
+                        },
+                        off: {
+                            icon: ' fa fa-check-circle mr-2 disabled'
+                        }
+                    };
+
+                // Event Handlers
+                $button.on('click', function () {
+
+                    $('.button-checkbox').each(function () {
+                        var $widget = $(this),
+                            $button = $widget.find('button'),
+                            $checkbox = $widget.find('input:checkbox');
+                        var isChecked = $checkbox.is(':checked');
+                        if (isChecked) {
+                            $checkbox.prop('checked', false);
+                            $button.data('state', (isChecked) ? "on" : "off");
+                            $button
+                                .removeClass('btn-' + color + ' active')
+                                .addClass('btn-default');
+                            $hidden.val(0);
+                            console.log(1);
+                        }
+                    });
+
+                    $checkbox.prop('checked', !$checkbox.is(':checked'));
+                    $checkbox.triggerHandler('change');
+                    updateDisplay();
+                });
+
+                $checkbox.on('change', function () {
+
+                });
+
+                // Actions
+                function updateDisplay() {
+                    var isChecked = $checkbox.is(':checked');
+
+                    // Set the button's state
+                    $button.data('state', (isChecked) ? "on" : "off");
+
+                    // Set the button's icon
+                    $button.find('.state-icon')
+                        .removeClass()
+                        .addClass('state-icon ' + settings[$button.data('state')].icon);
+
+                    // Update the button's color
+                    if (isChecked) {
+                        $button
+                            .removeClass('btn-default')
+                            .addClass('btn-' + color + ' active');
+                        $hidden.val($button.val());
+                    }
+                    else {
+                        $button
+                            .removeClass('btn-' + color + ' active')
+                            .addClass('btn-default');
+                        $hidden.val(0);
+                    }
+                }
+
+                // Initialization
+                function init() {
+                    updateDisplay();
+                    // Inject the icon if applicable
+                    if ($button.find('.state-icon').length == 0) {
+                        $button.prepend('<i class="state-icon' + settings[$button.data('state')].icon + '"></i> ');
+                    }
+                }
+                init();
+            });
+
+            $.validator.setDefaults({
+                submitHandler: function () {
+                    var wmsArray = [];
+                    $('.button-checkbox').each(function () {
+                        var $widget = $(this),
+                            $checkbox = $widget.find('input:checkbox'),
+                            $hidden = $widget.find('input:hidden');
+                        var isChecked = $checkbox.is(':checked');
+                        if (isChecked) {
+                            wmsArray.push($hidden.val());
+                        }
+                    });
+
+                    $('.spinner').css('display', 'block');
+                    $.ajax({
+                        type: "POST",
+                        url: "/WMSOptionList/Next",
+                        data: { wmsOption: wmsArray },
+                        cache: false,
+                        success: function (response) {
+                            if (response == 1) {
+                                var url = '@Url.Action("Index", "DirectMoveSerial")';
+                                window.location.href = url;
+                            }
+                            else if (response == 2) {
+                                var url = '@Url.Action("Index", "DirectMoveWO")';
+                                window.location.href = url;
+                            }
+                            else {
+                                if (response == 0)
+                                {
+                                    $('.spinner').css('display', 'none');
+                                    $('#infoMessage').addClass('alert-danger');
+                                    $('#infoMessage').text('Please select any option');
+                                    $('#infoMessage').stop();
+                                    $('#infoMessage').slideDown();
+                                    $('#infoMessage').delay(3000).slideUp("slow");
+                                }
+                                if (response == 3) {
+                                    $('.spinner').css('display', 'none');
+                                    $('#infoMessage').addClass('alert-danger');
+                                    $('#infoMessage').text('Please select any option');
+                                    $('#infoMessage').stop();
+                                    $('#infoMessage').slideDown();
+                                    $('#infoMessage').delay(3000).slideUp("slow");
+                                }
+                                if (response == -1) {
+                                    var url = '@Url.Action("Index", "Login")';
+                                    window.location.href = url;
+                                }
+                            }
+                        },
+                        failure: function (response) {
+                            //  alert(response.responseText);
+                            $('.spinner').css('display', 'none');
+                        },
+                        error: function (response) {
+                            //alert(response.responseText);
+                            $('.spinner').css('display', 'none');
+                        }
+                    });
+                }
+            });
+            $('#printerForm').validate({
+                rules: {
+                    "printerArray[]": {
+                        required: true,
+                        minlength: 1
+                    }
+                },
+                messages: {
+                    "printerArray[]": {
+                        required: "Please select Printer",
+                        minlength: "Please select Printer"
+                    }
+                },
+                errorElement: 'span',
+                errorPlacement: function (error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.input-group').append(error);
+                },
+                highlight: function (element, errorClass, validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
+                }
+            });
+        });
+        </script>
+
+</section>
+

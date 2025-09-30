@@ -1,0 +1,43 @@
+--------------------------------------------------------------- Rossell Kitting Material Start 11-27-2022 06:20:39-----------------------------------------------------------------
+RECORD_NO : 1/1
+WORKORDER_BOM_ID : 0
+WORKORDER_ID : 107541
+STANDARD_ID : 64031
+ARINVT_ID_FG : 199129
+ITEM_NO : HS5509-11-BBA3
+SNDOP_ID : 0
+ARINVT_ID_RM : 199894
+PTSPER : 1
+ITEMNO : RT030000100001
+DESCRIPTION : BASE
+DESCRIPTION2 : 683-3-20
+REQ_QUANTITY : 1
+HARD_ALLOCATION : 0
+FGMULTI_ID : 213520
+LOC_ID : 30829
+LOC_DESC : C001A01
+
+Successfully called Inventory/Disposition/MasterLabelRepack Web API 
+
+Serial Number After Repack Web API : 000003471
+
+Successfully Updated the Master Label Quantity manually : 000003471
+
+Successfully adjusted the Master Label Quantity manually : 3469
+
+Master Label ID After Repack Web API : 3471
+
+Successfully called Inventory/TransactionLocation/MoveToLocationFromMasterLabel Web API 
+
+Successfully called ARS_UTILS.DO_HARDALLOC Package
+
+Successfully called Labels/PrintLabel/ReprintSerial Web API
+
+Successfully Updated the Master Label Quantity manually After Reprint Serial Label Web API: 000003471
+
+Successfully adjusted the Master Label Quantity manually After Reprint Serial Label Web API: 3469
+
+Successfully picked ARINVT_ID 199894 and WORKORDER_ID 107541
+
+JSON DATA : {"SEQ_ID":4.0,"UOM":"GR","LOC_ID":30829.0,"LOC_DESC":"C001A01","WORKORDER_BOM_ID":0,"WORKORDER_ID":107541,"STANDARD_ID":64031,"ARINVT_ID_FG":199129,"ITEM_NO":"HS5509-11-BBA3","REL_QUANTITY":1.0,"SNDOP_ID":0,"ARINVT_ID_RM":199894,"PTSPER":1.0,"UNIT":"GR","ITEMNO":"RT030000100001","DESCRIPTION":"BASE","DESCRIPTION2":"683-3-20","REQ_QUANTITY":0.0,"HARD_ALLOCATION":1.0,"IS_PICKED":1.0,"IS_ERROR":0.0,"IS_SKIPPED":0.0,"ERROR_DESCRIPTION":"","MASTER_LABEL_ID":3469.0,"NEW_MASTER_LABEL_ID":3471.0,"FGMULTI_ID":213520,"STAGING_LOCATIONS_ID":32681,"OPMAT_FACTOR":1.00}
+

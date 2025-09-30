@@ -1,0 +1,19 @@
+--------------------------------------------------------------- Rossell WMS Start 08-11-2023 04:39:56-----------------------------------------------------------------
+MASTER LABEL ID : 4979
+SERIAL : 000004979
+ARINVT_ID : 204405
+SOURCE LOCATION : RECV
+SOURCE FGMULTI ID : 214776
+TARGET LOCATION : 32708
+IS REPACK : True
+
+Successfully called Inventory/Disposition/MasterLabelRepack Web API 
+
+Serial Number After Repack Web API : 000004990
+
+Master Label ID : 4990
+
+Successfully called Inventory/TransactionLocation/MoveToLocationFromMasterLabel Web API 
+
+--------------------------------------------------------------- Rossell WMS End 08-11-2023 04:40:29-----------------------------------------------------------------
+

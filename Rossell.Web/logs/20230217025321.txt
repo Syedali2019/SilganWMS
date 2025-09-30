@@ -1,0 +1,43 @@
+--------------------------------------------------------------- Rossell Kitting Material Start 02-17-2023 02:55:15-----------------------------------------------------------------
+RECORD_NO : 1/1
+WORKORDER_BOM_ID : 0
+WORKORDER_ID : 1341
+STANDARD_ID : 63955
+ARINVT_ID_FG : 196757
+ITEM_NO : 7-611B24301-125
+SNDOP_ID : 0
+ARINVT_ID_RM : 199066
+PTSPER : 1
+ITEMNO : RT207003300055
+DESCRIPTION : COAX CONN N PLUG 90 CRIMP PIN IMP 50 OHM
+DESCRIPTION2 : 082-5374
+REQ_QUANTITY : 1
+HARD_ALLOCATION : 0
+FGMULTI_ID : 201141
+LOC_ID : 29098
+LOC_DESC : K026D06
+
+Successfully called Inventory/Disposition/MasterLabelRepack Web API 
+
+Serial Number After Repack Web API : 000003735
+
+Successfully Updated the Master Label Quantity manually : 000003735
+
+Successfully adjusted the Master Label Quantity manually : 2456
+
+Master Label ID After Repack Web API : 3735
+
+Successfully called Inventory/TransactionLocation/MoveToLocationFromMasterLabel Web API 
+
+Successfully called ARS_UTILS.DO_HARDALLOC Package
+
+Successfully called Labels/PrintLabel/ReprintSerial Web API
+
+Successfully Updated the Master Label Quantity manually After Reprint Serial Label Web API: 000003735
+
+Successfully adjusted the Master Label Quantity manually After Reprint Serial Label Web API: 2456
+
+Successfully picked ARINVT_ID 199066 and WORKORDER_ID 1341
+
+JSON DATA : {"SEQ_ID":2.0,"UOM":"EACH","LOC_ID":29098.0,"LOC_DESC":"K026D06","WORKORDER_BOM_ID":0,"WORKORDER_ID":1341,"STANDARD_ID":63955,"ARINVT_ID_FG":196757,"ITEM_NO":"7-611B24301-125","REL_QUANTITY":1.0,"SNDOP_ID":0,"ARINVT_ID_RM":199066,"PTSPER":1.0,"UNIT":"EACH","ITEMNO":"RT207003300055","DESCRIPTION":"COAX CONN N PLUG 90 CRIMP PIN IMP 50 OHM","DESCRIPTION2":"082-5374","REQ_QUANTITY":0.0,"HARD_ALLOCATION":1.0,"IS_PICKED":1.0,"IS_ERROR":0.0,"IS_SKIPPED":0.0,"ERROR_DESCRIPTION":"","MASTER_LABEL_ID":2456.0,"NEW_MASTER_LABEL_ID":3735.0,"FGMULTI_ID":201141,"STAGING_LOCATIONS_ID":32681,"OPMAT_FACTOR":1.00}
+

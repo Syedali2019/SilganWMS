@@ -1,0 +1,66 @@
+--------------------------------------------------------------- Rossell Kitting Material Start 03-29-2023 11:34:11-----------------------------------------------------------------
+RECORD_NO : 2/1
+WORKORDER_BOM_ID : 0
+WORKORDER_ID : 110348
+STANDARD_ID : 64040
+ARINVT_ID_FG : 199129
+ITEM_NO : HS5509-11-BBA3
+SNDOP_ID : 0
+ARINVT_ID_RM : 204391
+PTSPER : 10
+ITEMNO : RM0357
+DESCRIPTION : H.D.P.E. IM (M 5018 /M 5818 L)
+DESCRIPTION2 : N/A
+REQ_QUANTITY : 10
+HARD_ALLOCATION : 0
+FGMULTI_ID : 213874
+LOC_ID : 30829
+LOC_DESC : C001A01
+
+Successfully called Inventory/Disposition/MasterLabelRepack Web API 
+
+Serial Number After Repack Web API : 000003893
+
+Successfully Updated the Master Label Quantity manually : 000003893
+
+Successfully adjusted the Master Label Quantity manually : 3891
+
+Master Label ID After Repack Web API : 3893
+
+Successfully called Inventory/TransactionLocation/MoveToLocationFromMasterLabel Web API 
+
+Successfully called ARS_UTILS.DO_HARDALLOC Package
+
+Successfully called Labels/PrintLabel/ReprintSerial Web API
+
+Successfully Updated the Master Label Quantity manually After Reprint Serial Label Web API: 000003893
+
+Successfully adjusted the Master Label Quantity manually After Reprint Serial Label Web API: 3891
+
+Successfully picked ARINVT_ID 204391 and WORKORDER_ID 110348
+
+JSON DATA : {"SEQ_ID":4.0,"UOM":"KG","LOC_ID":30829.0,"LOC_DESC":"C001A01","WORKORDER_BOM_ID":0,"WORKORDER_ID":110348,"STANDARD_ID":64040,"ARINVT_ID_FG":199129,"ITEM_NO":"HS5509-11-BBA3","REL_QUANTITY":10.0,"SNDOP_ID":0,"ARINVT_ID_RM":204391,"PTSPER":10.0,"UNIT":"KG","ITEMNO":"RM0357","DESCRIPTION":"H.D.P.E. IM (M 5018 /M 5818 L)","DESCRIPTION2":"N/A","REQ_QUANTITY":0.0,"HARD_ALLOCATION":10.0,"IS_PICKED":1.0,"IS_ERROR":0.0,"IS_SKIPPED":0.0,"ERROR_DESCRIPTION":"","MASTER_LABEL_ID":3891.0,"NEW_MASTER_LABEL_ID":3893.0,"FGMULTI_ID":213874,"STAGING_LOCATIONS_ID":32681,"OPMAT_FACTOR":1.00}
+
+--------------------------------------------------------------- Rossell Kitting Material Start 03-29-2023 11:34:20-----------------------------------------------------------------
+RECORD_NO : 2/1
+WORKORDER_BOM_ID : 0
+WORKORDER_ID : 110348
+STANDARD_ID : 64040
+ARINVT_ID_FG : 199129
+ITEM_NO : HS5509-11-BBA3
+SNDOP_ID : 0
+ARINVT_ID_RM : 204391
+PTSPER : 10
+ITEMNO : RM0357
+DESCRIPTION : H.D.P.E. IM (M 5018 /M 5818 L)
+DESCRIPTION2 : N/A
+REQ_QUANTITY : 0
+HARD_ALLOCATION : 10
+FGMULTI_ID : 213874
+LOC_ID : 30829
+LOC_DESC : C001A01
+
+Skipped the ARINVT_ID 204391 and WORKORDER_ID 110348
+
+JSON DATA : {"SEQ_ID":4.0,"UOM":"KG","LOC_ID":30829.0,"LOC_DESC":"C001A01","WORKORDER_BOM_ID":0,"WORKORDER_ID":110348,"STANDARD_ID":64040,"ARINVT_ID_FG":199129,"ITEM_NO":"HS5509-11-BBA3","REL_QUANTITY":10.0,"SNDOP_ID":0,"ARINVT_ID_RM":204391,"PTSPER":10.0,"UNIT":"KG","ITEMNO":"RM0357","DESCRIPTION":"H.D.P.E. IM (M 5018 /M 5818 L)","DESCRIPTION2":"N/A","REQ_QUANTITY":0.0,"HARD_ALLOCATION":10.0,"IS_PICKED":1.0,"IS_ERROR":0.0,"IS_SKIPPED":1.0,"ERROR_DESCRIPTION":"","MASTER_LABEL_ID":3891.0,"NEW_MASTER_LABEL_ID":3893.0,"FGMULTI_ID":213874,"STAGING_LOCATIONS_ID":32681,"OPMAT_FACTOR":1.00}
+

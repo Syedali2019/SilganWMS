@@ -1,0 +1,19 @@
+--------------------------------------------------------------- Rossell WMS Start 09-30-2023 04:14:50-----------------------------------------------------------------
+MASTER LABEL ID : 5174
+SERIAL : 000005174
+ARINVT_ID : 198927
+SOURCE LOCATION : C001A05
+SOURCE FGMULTI ID : 213496
+TARGET LOCATION : 31016
+IS REPACK : True
+
+Successfully called Inventory/Disposition/MasterLabelRepack Web API 
+
+Serial Number After Repack Web API : 000005205
+
+Master Label ID : 5205
+
+Successfully called Inventory/TransactionLocation/MoveToLocationFromMasterLabel Web API 
+
+--------------------------------------------------------------- Rossell WMS End 09-30-2023 04:14:58-----------------------------------------------------------------
+

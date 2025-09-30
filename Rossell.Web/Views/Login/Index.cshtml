@@ -1,0 +1,114 @@
+﻿
+@{    
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<form class="border rounded" method="post" id="LoginForm">
+    <div class="input-group">
+        <div id="infoMessage" class="alert font" style="display: none;">
+            <p></p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="UserEmail">Username</label>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa fa-user-o" aria-hidden="true"></i></span>
+            </div>
+            <input type="text" name="UserName" id="UserName" class="form-control" placeholder="User Name">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="UserPassword">Password</label>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa fa-unlock" aria-hidden="true"></i></span>
+            </div>
+            <input type="password" name="password" id="UserPassword" class="form-control" placeholder="Password">
+        </div>
+    </div>
+    <input type="submit" class="btn btn-primary btn-block btn-lg mt-3" value="Login" />
+</form>
+<div class="spinner" style="display:none">
+    <div class="center-div">
+        <div class="inner-div">
+            <div class="loader"></div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.validator.setDefaults({
+                submitHandler: function () {
+                    var parameters =
+                    {
+                        userPassword: $("#UserPassword").val(),
+                        userEmail: $("#UserName").val(),
+                    }
+                    $('.spinner').css('display', 'block');
+                    $.ajax({
+                        type: "POST",
+                        url: "/Login/Login",
+                        data: { user: parameters },
+                        cache: false,
+                        success: function (response) {
+                            if (response == true) {
+                                var url = '@Url.Action("Index", "Printer")';
+                                window.location.href = url;
+                            }
+                            else {
+                                    $('.spinner').css('display', 'none');
+                                    $('#infoMessage').addClass('alert-danger');
+                                    $('#infoMessage').text('Invalid UserName Or Password.');
+                                    $('#infoMessage').stop();
+                                    $('#infoMessage').slideDown();
+                                    $('#infoMessage').delay(5000).slideUp("slow");
+                            }
+                        },
+                        failure: function (response) {
+                            //  alert(response.responseText);
+                            $('.spinner').css('display', 'none');
+                        },
+                        error: function (response) {
+                            //alert(response.responseText);
+                            $('.spinner').css('display', 'none');
+                        }
+                    });
+                }
+            });
+            $('#LoginForm').validate({
+                rules: {
+                    UserName: {
+                        required: true                      
+                    },
+                    password: {
+                        required: true,
+                        minlength: 4
+                    },
+
+                },
+                messages: {
+                    email: {
+                        required: "Please enter a User Name",
+                    },
+                    password: {
+                        required: "Please provide a password",
+                        minlength: "Your password must be at least 5 characters long"
+                    }
+                },
+                errorElement: 'span',
+                errorPlacement: function (error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.input-group').append(error);
+                },
+                highlight: function (element, errorClass, validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
+                }
+            });
+        });</script>
+}
+

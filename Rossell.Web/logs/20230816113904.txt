@@ -1,0 +1,41 @@
+--------------------------------------------------------------- Rossell Kitting Material Start 08-16-2023 11:40:36-----------------------------------------------------------------
+RECORD_NO : 1/1
+WORKORDER_BOM_ID : 0
+WORKORDER_ID : 110445
+STANDARD_ID : 64060
+ARINVT_ID_FG : 199129
+ITEM_NO : HS5509-11-BBA3
+SNDOP_ID : 0
+ARINVT_ID_RM : 197056
+PTSPER : 0.0041
+ITEMNO : RT207013500020
+DESCRIPTION : TERMINAL LUG STR RING TONGUE CRIMP 12-10 AWG 8 -10STUD SZ INSULATED
+DESCRIPTION2 : YAV10Â€“H
+REQ_QUANTITY : 2
+HARD_ALLOCATION : 0
+FGMULTI_ID : 213781
+LOC_ID : 30829
+LOC_DESC : C001A01
+
+Successfully called Inventory/Disposition/MasterLabelRepack Web API 
+
+Serial Number After Repack Web API : 000005057
+
+Successfully Updated the Master Label Type manually : 000005057
+
+Master Label ID After Repack Web API : 5057
+
+Successfully called Inventory/TransactionLocation/MoveToLocationFromMasterLabel Web API 
+
+Successfully called ARS_UTILS.DO_HARDALLOC Package
+
+Updated the FGMulti No_Ship Flag : 'Y' FGMULTI_ID : 214825
+
+Successfully called Labels/PrintLabel/ReprintSerial Web API
+
+Successfully picked ARINVT_ID 197056 and WORKORDER_ID 110445
+
+JSON DATA : {"SEQ_ID":2.0,"UOM":"LB","LOC_ID":30829.0,"LOC_DESC":"C001A01","WORKORDER_BOM_ID":0,"WORKORDER_ID":110445,"STANDARD_ID":64060,"ARINVT_ID_FG":199129,"ITEM_NO":"HS5509-11-BBA3","REL_QUANTITY":2.0,"SNDOP_ID":0,"ARINVT_ID_RM":197056,"PTSPER":0.0041,"UNIT":"GR","ITEMNO":"RT207013500020","DESCRIPTION":"TERMINAL LUG STR RING TONGUE CRIMP 12-10 AWG 8 -10STUD SZ INSULATED","DESCRIPTION2":"YAV10Â€“H","REQ_QUANTITY":1.99589995899959,"HARD_ALLOCATION":0.0041000410004100041,"IS_PICKED":0.0,"IS_ERROR":0.0,"IS_KITTED":0.0,"ENOUGH_ONHAND":true,"IS_SKIPPED":1.0,"ERROR_DESCRIPTION":"","MASTER_LABEL_ID":4978.0,"NEW_MASTER_LABEL_ID":5057.0,"FGMULTI_ID":213781,"STAGING_LOCATIONS_ID":32681,"OPMAT_FACTOR":487.80}
+
+--------------------------------------------------------------- Rossell Kitting Material End 08-16-2023 11:41:51-----------------------------------------------------------------
+

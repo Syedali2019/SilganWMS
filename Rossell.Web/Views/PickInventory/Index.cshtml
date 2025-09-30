@@ -1,0 +1,836 @@
+﻿
+@{    
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container" style="padding: 8px;">
+    <form class="border rounded" method="post" id="PickInventoryForm">
+        @if (ViewBag.PickInventoryItem != null)
+        {
+            <div class="input-group">
+                <div id="infoMessage" class="alert font" style="display: none;">
+                    <p></p>
+                </div>
+            </div>
+
+            <div class="form-group location-field">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
+                    </div>
+                    <input type="text" class="form-control pl-0" id="location" name="location" placeholder="Location" value="@ViewBag.Location" disabled>
+                    <input type="hidden" id="hdnSeqNo" name="hdnSeqNo" value="@ViewBag.SeqNo" />
+                    <input type="hidden" id="hdnWorkOrderID" name="hdnWorkOrderID" value="@ViewBag.PickInventoryItem.WORKORDER_ID" />
+                    <input type="hidden" id="hdnARINVT" name="hdnARINVT" value="@ViewBag.PickInventoryItem.ARINVT_ID_RM" />
+                    <input type="hidden" id="hdnItemNo" name="hdnItemNo" value="@ViewBag.PickInventoryItem.ITEMNO" />
+                    <input type="hidden" id="hdnReqQty" name="hdnReqQty" value="@ViewBag.PickInventoryItem.REL_QUANTITY" />
+                    <input type="hidden" id="hdnLocation" name="hdnLocation" value="@ViewBag.Location" />
+                    <input type="hidden" id="hdnItemUnit" name="hdnLocation" value="@ViewBag.PickInventoryItem.UNIT" />
+                    <input type="hidden" id="hdnNewSerialNumber" name="hdnNewSerialNumber" value="" />
+                    <input type="hidden" id="hdnFACTOR" name="hdnLocation" value="@ViewBag.PickInventoryItem.OPMAT_FACTOR" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="accordion" id="accordionExample">
+                    <div class="card border-0 work-order-detail">
+                        <div class="card-header bg-primary text-light" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true">
+                            <span class="title">WO#: @ViewBag.PickInventoryItem.WORKORDER_ID </span>
+                            <span class="accicon"><i class="fa fa-angle-down rotate-icon"></i></span>
+                        </div>
+                        <div id="collapseOne" class="collapse show" data-parent="#accordionExample">
+                            <div class="card-body p-0">
+                                <table class="wo-details">
+                                    <tr>
+                                        <th><span>Item #:</span></th>
+                                        <td><span>@ViewBag.PickInventoryItem.ITEMNO</span></td>
+                                    </tr>
+                                    <tr>
+                                        <th><span>OEM Part No:</span></th>
+                                        <td>
+                                            <span>@ViewBag.PickInventoryItem.DESCRIPTION2</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><span>UOM:</span></th>
+                                        <td><span>@ViewBag.PickInventoryItem.UNIT</span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div>
+                    <div class=" py-1 px-2 font-weight-bold bg-light text-dark border rounded quantityBox QReq">Qty Req: <div id="QReq" style="display:inline;">@string.Format("{0:n2}", ViewBag.PickInventoryItem.REL_QUANTITY)</div></div>
+                    <div class=" py-1 px-2 font-weight-bold bg-light text-dark border rounded quantityBox QPick"> Qty Picked: <div id="QPick" style="display:inline;">@string.Format("{0:n2}", ViewBag.PickInventoryItem.HARD_ALLOCATION)</div></div>
+                    <div class=" py-1 px-2 font-weight-bold bg-light text-dark border rounded quantityBox2 QNeed"> Qty Needed: <div id="QNeed" style="display:inline;">@string.Format("{0:n2}", ViewBag.PickInventoryItem.REQ_QUANTITY)</div></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group mb-3">
+                    <input type="text" class="input-button-group form-control" id="txtScanSerial" name="txtScanSerial" required placeholder="Scan serial #" aria-describedby="basic-addon2">
+                    <div class="invalid-feedback">
+                        Please enter a Scan Serial
+                    </div>
+                    <div class="input-group-append">
+                        <button id="btnValidate" type="button" class="btn btn-primary" style="display:none;">Validate</button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Enter QTY to pick</span>
+                    </div>
+                    <input type="text" class="form-control" aria-label="Sizing example input" id="txtPickQty" name="txtPickQty" disabled required aria-describedby="inputGroup-sizing-sm">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-group d-flex justify-content-end pt-2 mb-0">
+                    <button id="btnBack" type="button" class="btn btn-primary">Back</button>&nbsp;&nbsp;&nbsp;
+                    <button id="btnRePrint" type="button" class="btn btn-primary" style="display:none;">Reprint</button>&nbsp;&nbsp;&nbsp;
+                    <input type="submit" value="Save & Next" class="btn btn-secondary btn-sm text-right" id="btnSaveNext" style="display:none;" />
+                    <button id="btnNextLocation" type="button" class="btn btn-primary" style="display:none;">Next Location</button>&nbsp;&nbsp;&nbsp;
+                    <button id="btnOK" type="button" class="btn btn-primary" style="display:none;">OK</button>&nbsp;&nbsp;&nbsp;
+                    <button id="btnNextItem" type="button" class="btn btn-primary">Next Item</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="accordion" id="accordionListExample">
+                    <div class="card border-0 work-order-detail">
+                        <div class="card-header bg-primary text-light" data-toggle="collapse" data-target="#collapseList" aria-expanded="true">
+                            @if (ViewBag.PickInventoryItem.UNIT == ViewBag.PickInventoryItem.UOM)
+                            {
+                                <span class="title">Item Location(s)</span>
+                            }
+                            else
+                            {
+                                <span class="title">Item Location(s) Base Unit : @ViewBag.PickInventoryItem.UOM</span>
+                            }
+                            <span class="accicon"><i class="fa fa-angle-down rotate-icon"></i></span>
+                        </div>
+                        <div id="collapseList" class="collapse show" data-parent="#accordionListExample">
+                            <div class="card-body p-0">
+                                <table class="wo-details">
+                                    <tr>
+                                        <th><span>Loc Descrip</span></th>
+                                        <th><span>On Hand</span></th>
+                                        <th><span>Lot #</span></th>
+                                        <th><span>Vendor Lot #</span></th>
+                                    </tr>
+                                    @foreach (var itemLocation in ViewBag.ItemLocation)
+                                    {
+                                    <tr>
+                                        <td><span>@itemLocation.LOC_DESCRIPTION</span></td>
+                                        <td><span>@itemLocation.ON_HAND</span></td>
+                                        <td><span>@itemLocation.LOT_NUMBER</span></td>
+                                        <td><span>@itemLocation.VENDOR_LOT_NUMBER</span></td>
+                                    </tr>
+                                    }
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="input-group">
+                <div id="infoMessage" class="alert font" style="display: block;">
+                    <p style="color:red">If you want to pick more items please click OK buton to continue</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-group d-flex justify-content-end pt-2 mb-0">
+                    <button id="btnOK" type="button" class="btn btn-primary">OK</button>&nbsp;&nbsp;&nbsp;
+                </div>
+            </div>
+        }
+    </form>
+    <div class="spinner" style="display:none">
+        <div class="center-div">
+            <div class="inner-div">
+                <div class="loader"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#txtPickQty").bind("keypress", function (e) {
+            var keyCode = e.which ? e.which : e.keyCode
+            var itemUnit = $("#hdnItemUnit").val();
+            if (itemUnit == 'EACH') {
+                if (!(keyCode >= 48 && keyCode <= 57)) {
+                    $(".error").css("display", "inline");
+                    return false;
+                } else {                    
+                    $(".error").css("display", "none");
+                }
+            }
+            else {
+                if (!(keyCode >= 48 && keyCode <= 57 || keyCode == 46)) {
+                    $(".error").css("display", "inline");
+                    return false;
+                } else {
+                    $(".error").css("display", "none");
+                }
+            }
+        });
+
+        $("#txtPickQty").blur(function () {            
+            var itemUnit = $("#hdnItemUnit").val();
+            if (itemUnit == 'EACH') {
+                $("#txtPickQty").val(Math.floor($("#txtPickQty").val()));
+            }
+        });
+
+        $('#txtScanSerial').on('keydown', function (event) {
+            if (event.which == 13) {
+
+                $("#txtScanSerial").removeClass('is-invalid');
+                if ($("#txtScanSerial").val() == '') {
+                    $("#txtScanSerial").addClass('is-invalid');
+                    return false;
+                }
+
+                $('.spinner').css('display', 'block');
+                var snumber = $("#txtScanSerial").val();
+                snumber = snumber.replace('S', '');
+                snumber = snumber.replace('s', '');
+                $("#txtScanSerial").val(snumber);
+                $.ajax({
+                    type: "POST",
+                    url: "/PickInventory/Validate",
+                    data: { serialNumber: $("#txtScanSerial").val(), workOrderID: $("#hdnWorkOrderID").val(), arinvtID: $("#hdnARINVT").val() },
+                    cache: false,
+                    success: function (response) {                        
+                        if (response.status == 0) {
+                            //$("#btnSaveNext").css('display', 'block');
+                            $('.spinner').css('display', 'none');
+                            $("#btnValidate").text('Validated');
+                            $("#btnValidate").attr('disabled', true);
+                            $("#btnValidate").removeClass('btn-primary');
+                            $("#btnValidate").addClass('btn-success');
+                            $('#txtScanSerial').attr('readonly', 'readonly');
+                            $('#txtPickQty').removeAttr('disabled');
+                            $('#txtPickQty').focus();
+                            $('#txtPickQty').select();
+                        }
+                        else {
+                            $('.spinner').css('display', 'none');
+                            $('#infoMessage').addClass('alert-danger');
+                            if (response.status == -1) {
+                                location.href = '/Login/Index/';
+                            }
+
+                            $('.spinner').css('display', 'none');
+                            $('#infoMessage').addClass('alert-danger');
+                            if (response.status == 1) {
+                                $('#infoMessage').html(response.message);
+                            }
+
+                            if (response.status == 2) {
+                                $('#infoMessage').text('Scanned serial number ' + $("#txtScanSerial").val() + ' is not associated with Location ' + $("#hdnLocation").val() );
+                                //$("#btnSaveNext").css('display', 'block');
+                                $("#btnValidate").text('Validated');
+                                $("#btnValidate").attr('disabled', true);
+                                $("#btnValidate").removeClass('btn-primary');
+                                $("#btnValidate").addClass('btn-success');
+                                $('#txtScanSerial').attr('readonly', 'readonly');
+                            }
+
+                            if (response.status == 3) {
+                                $('#infoMessage').text('Please enter a serial number');
+                                //$("#btnSaveNext").css('display', 'block');
+                            }
+                            $('#infoMessage').stop();
+                            $('#infoMessage').slideDown();
+                            $('#infoMessage').delay(3000).slideUp("slow");
+
+                            if (response.status == -3) {
+                                var url = '@Url.Action("Index", "Login")';
+                                window.location.href = url;
+                            }
+                        }
+                    },
+                    failure: function (response) {
+                        //  alert(response.responseText);
+                        $('.spinner').css('display', 'none');
+                    },
+                    error: function (response) {
+                        //alert(response.responseText);
+                        $('.spinner').css('display', 'none');
+                    }
+                });
+                return false;
+            }
+        })
+
+        var userClick = false;
+
+        $('#txtPickQty').on('keydown', function (event) {            
+            if (event.which == 13) {
+
+                $("#txtPickQty").removeClass('is-invalid');
+                if ($("#txtPickQty").val() == '') {
+                    $("#txtPickQty").addClass('is-invalid');
+                    return false;
+                }
+
+                if (userClick == false) {
+                    event.preventDefault();
+                    userClick = true;                    
+                    if (itemUnit == 'EACH') {
+                        $("#txtPickQty").val(Math.floor($("#txtPickQty").val()));
+                    }
+                    $('#txtPickQty').attr('disabled', 'disabled'); 
+                    $('.spinner').css('display', 'block');
+                    var reqQty = eval($("#hdnReqQty").val());
+                    var pickQty = eval($("#txtPickQty").val());
+                    var pPick = eval($('#QPick').text().replace(',',''));
+                    var needQty = reqQty - (pickQty + pPick);
+                    var needQtyC = eval($('#QNeed').text().replace(",", ""));
+                    var itemUnit = $("#hdnItemUnit").val();
+
+
+                    if (pickQty <= 0) {
+                        $('.spinner').css('display', 'none');
+                        $('#infoMessage').addClass('alert-danger');
+                        $('#infoMessage').text('Pick Quantity should be greater than 0');
+                        $('#infoMessage').stop();
+                        $('#infoMessage').slideDown();
+                        $('#infoMessage').delay(3000).slideUp("slow");
+                        $('#txtPickQty').focus();
+                        $('#txtPickQty').select();
+                        return false;
+                    }
+
+                    if (pickQty > needQtyC) {
+                        $('.spinner').css('display', 'none');
+                        $('#infoMessage').addClass('alert-danger');
+                        $('#infoMessage').text('Pick Quantity should be less than equal to Required Quantity');
+                        $('#infoMessage').stop();
+                        $('#infoMessage').slideDown();
+                        $('#infoMessage').delay(3000).slideUp("slow");
+                        $('#txtPickQty').focus();
+                        $('#txtPickQty').select();
+                        return false;
+                    }
+
+
+                    var parameters =
+                    {
+                        SerialNumber: $("#txtScanSerial").val(),
+                        PickQuantity: eval($("#txtPickQty").val()),
+                        WorkOrderID: eval($("#hdnWorkOrderID").val()),
+                        ARINVT_ID: eval($("#hdnARINVT").val()),
+                        Factor: eval($("#hdnFACTOR").val()),
+                    }
+                    $('.spinner').css('display', 'block');
+                    $.ajax({
+                        type: "POST",
+                        url: "/PickInventory/Next",
+                        data: { pickInventory: parameters },
+                        cache: false,
+                        success: function (response) {
+                            if (response.status == -1) {
+                                $('.spinner').css('display', 'none');
+                                //var url = '@Url.Action("Index", "PickInventory")';
+                                //window.location.href = url;
+
+                                //$("#btnNextLocation").css('display', 'block');
+                                $('.spinner').css('display', 'none');
+                                $('#infoMessage').removeClass('alert-danger');
+                                $('#infoMessage').removeClass('alert-info');
+                                $('#infoMessage').addClass('alert-success');
+                                $('#infoMessage').text('successfully Item # ' + $("#hdnItemNo").val() + ' picked WO #' + $("#hdnWorkOrderID").val());
+                                $('#infoMessage').stop();
+                                $('#infoMessage').slideDown();
+                                $('#infoMessage').delay(3000).slideUp("slow");
+                                //$('#txtPickQty').hide();
+                                $("#btnRePrint").css('display', 'block');
+                                $("#btnBack").css('display', 'block');
+                                $('#hdnNewSerialNumber').val(response.serial);
+                                if (itemUnit != 'EACH') {
+                                    $('#QPick').text((pickQty + pPick).toFixed(2));
+                                    $('#QNeed').text(needQty.toFixed(2));
+                                }
+                                else {
+                                    $('#QPick').text(pickQty + pPick);
+                                    $('#QNeed').text(needQty);
+                                }
+
+                                if (needQty > 0) {
+                                    $('.QPick').remove("fullpick");
+                                    $('.QPick').addClass("partialpick");
+                                }
+
+                                if (needQty <= 0) {
+                                    $('.QPick').remove("partialpick");
+                                    $('.QPick').addClass("fullpick");
+                                }                                
+                            }
+                            else if (response.status == 0) {
+                                $("#btnNextItem").css('display', 'none');
+                                $("#btnNextLocation").css('display', 'block');
+                                $('.spinner').css('display', 'none');
+                                $('#infoMessage').removeClass('alert-danger');
+                                $('#infoMessage').removeClass('alert-success');
+                                $('#infoMessage').addClass('alert-info');
+                                $('#infoMessage').text('All items have been picked from Location ' + $("#location").val() + '. Go to the next location.');
+                                $('#infoMessage').stop();
+                                $('#infoMessage').slideDown();
+                                $('#infoMessage').delay(3000).slideUp("slow");
+                                $("#btnRePrint").css('display', 'block');
+                                $("#btnBack").css('display', 'block');
+                                $('#txtPickQty').attr('readonly', 'readonly');
+                                $('#hdnNewSerialNumber').val(response.serial);
+                                if (itemUnit != 'EACH') {
+                                    $('#QPick').text((pickQty + pPick).toFixed(2));
+                                    $('#QNeed').text(needQty.toFixed(2));
+                                }
+                                else {
+                                    $('#QPick').text(pickQty + pPick);
+                                    $('#QNeed').text(needQty);
+                                }
+
+                                if (needQty > 0) {
+                                    $('.QPick').remove("fullpick");
+                                    $('.QPick').addClass("partialpick");
+                                }
+
+                                if (needQty <= 0) {
+                                    $('.QPick').remove("partialpick");
+                                    $('.QPick').addClass("fullpick");
+                                }
+                            }
+                            else if (response.status == 1) {
+                                //$("#btnNextItem").css('display', 'none');
+                                $("#btnOK").css('display', 'block');
+                                $('.spinner').css('display', 'none');
+                                $('#infoMessage').removeClass('alert-danger');
+                                $('#infoMessage').removeClass('alert-success');
+                                $('#infoMessage').addClass('alert-info');
+                                //$('#infoMessage').text('All items have been picked. Click Ok button to continue');
+                                $('#infoMessage').find('p').html(response.message);
+                                $('#infoMessage').stop();
+                                $('#infoMessage').slideDown();
+                                $('#infoMessage').delay(5000).slideUp("slow");
+                                $("#btnRePrint").css('display', 'block');
+                                $("#btnBack").css('display', 'block');
+                                $('#txtPickQty').attr('readonly', 'readonly');
+                                $('#hdnNewSerialNumber').val(response.serial);
+                                if (itemUnit != 'EACH') {
+                                    $('#QPick').text((pickQty + pPick).toFixed(2));
+                                    $('#QNeed').text(needQty.toFixed(2));
+                                }
+                                else {
+                                    $('#QPick').text(pickQty + pPick);
+                                    $('#QNeed').text(needQty);
+                                }
+
+                                if (needQty > 0) {
+                                    $('.QPick').remove("fullpick");
+                                    $('.QPick').addClass("partialpick");
+                                }
+
+                                if (needQty <= 0) {
+                                    $('.QPick').remove("partialpick");
+                                    $('.QPick').addClass("fullpick");
+                                }
+                            }
+                            else if (response.status == -2) {
+                                //$("#btnNextItem").css('display', 'none');
+                                //$("#btnOK").css('display', 'block');
+                                $('.spinner').css('display', 'none');
+                                $('#infoMessage').addClass('alert-danger');
+                                $('#infoMessage').text('Either Serial not scanned OR Pick Quantity Less than or equal to 0');
+                                $('#infoMessage').stop();
+                                $('#infoMessage').slideDown();
+                                $('#infoMessage').delay(3000).slideUp("slow");
+                                $("#btnRePrint").css('display', 'none');
+                                $("#btnBack").css('display', 'block');
+                            }
+                            else if (response.status == 3) {
+                                //$("#btnNextItem").css('display', 'none');
+                                //$("#btnOK").css('display', 'block');
+                                $('.spinner').css('display', 'none');
+                                $('#infoMessage').addClass('alert-danger');
+                                $('#infoMessage').text('New Master Label not created sucessfully by Web API');
+                                $('#infoMessage').stop();
+                                $('#infoMessage').slideDown();
+                                $('#infoMessage').delay(3000).slideUp("slow");
+                                $("#btnRePrint").css('display', 'none');
+                                $("#btnBack").css('display', 'block');
+                            }
+                            else if (response.status == -3) {
+                                //$("#btnNextItem").css('display', 'none');
+                                //$("#btnOK").css('display', 'block');
+                                $('.spinner').css('display', 'none');
+                                var url = '@Url.Action("Index", "Login")';
+                                window.location.href = url;
+                            }
+                            else {
+                                //$("#btnNextItem").css('display', 'none');
+                                $('.spinner').css('display', 'none');
+                                $('#infoMessage').addClass('alert-danger');
+                                $('#infoMessage').text('Please Scan Serial Number or Enter the Pick Quantity');
+                                $('#infoMessage').stop();
+                                $('#infoMessage').slideDown();
+                                $('#infoMessage').delay(3000).slideUp("slow");
+                                $("#btnRePrint").css('display', 'none');
+                                $("#btnBack").css('display', 'block');
+                            }
+                        },
+                        failure: function (response) {
+                            //  alert(response.responseText);
+                            $('.spinner').css('display', 'none');
+                        },
+                        error: function (response) {
+                            //alert(response.responseText);
+                            $('.spinner').css('display', 'none');
+                        }
+                    });
+                    return false;
+                }
+                userClick = false;
+            }
+        })
+
+
+        $('#btnValidate').on('click', function () {
+            $('.spinner').css('display', 'block');
+            $.ajax({
+                type: "POST",
+                url: "/PickInventory/Validate",
+                data: { serialNumber: $("#txtScanSerial").val(), workOrderID: $("#hdnWorkOrderID").val(), arinvtID: $("#hdnARINVT").val() },
+                cache: false,
+                success: function (response) {
+                    console.log(response);
+                    if (response == 0) {
+                        //$("#btnSaveNext").css('display', 'block');
+                        $('.spinner').css('display', 'none');                        
+                        $("#btnValidate").text('Validated');
+                        $("#btnValidate").attr('disabled', true);
+                        $("#btnValidate").removeClass('btn-primary');
+                        $("#btnValidate").addClass('btn-success');
+                        $('#txtScanSerial').attr('readonly', 'readonly');
+                    }
+                    else {
+                        $('.spinner').css('display', 'none');                        
+                        $('#infoMessage').addClass('alert-danger');
+                        if (response == 1) {
+                            $('#infoMessage').text('Scaned Serial Number ' + $("#txtScanSerial").val() + ' is not found');
+                        }
+
+                        if (response == 2) {
+                            $('#infoMessage').text('Scanned serial number ' + $("#txtScanSerial").val() + ' is not linked to the FGMULTI ID');
+                            //$("#btnSaveNext").css('display', 'block');
+                            $("#btnValidate").text('Validated');
+                            $("#btnValidate").attr('disabled', true);
+                            $("#btnValidate").removeClass('btn-primary');
+                            $("#btnValidate").addClass('btn-success');                          
+                            $('#txtScanSerial').attr('readonly', 'readonly');
+                        }  
+
+                        if (response == 3) {
+                            $('#infoMessage').text('Please enter a serial number');
+                            //$("#btnSaveNext").css('display', 'block');
+                        } 
+                        $('#infoMessage').stop();
+                        $('#infoMessage').slideDown();
+                        $('#infoMessage').delay(3000).slideUp("slow");
+                    }
+                },
+                failure: function (response) {
+                    //  alert(response.responseText);
+                    $('.spinner').css('display', 'none');
+                },
+                error: function (response) {
+                    //alert(response.responseText);
+                    $('.spinner').css('display', 'none');
+                }
+            });
+        });
+
+        $('#btnNextLocation').on('click', function () {            
+            var url = '@Url.Action("Index", "Location")';
+            window.location.href = url;
+        });
+
+
+        $('#btnOK').on('click', function () {            
+            var url = '@Url.Action("Index", "FilterWorkOrder")';
+            window.location.href = url;
+        });
+
+        $('#btnBack').on('click', function () {            
+            $('.spinner').css('display', 'block');
+            $.ajax({
+                type: "POST",
+                url: "/PickInventory/Back",
+                data: { serialNumber: $("#txtScanSerial").val(), workOrderID: $("#hdnWorkOrderID").val(), arinvtID: $("#hdnARINVT").val() },
+                cache: false,
+                success: function (response) {                    
+                    if (response == 1) {
+                        $('.spinner').css('display', 'none');
+                          var url = '@Url.Action("Index", "PickInventory")';
+                        window.location.href = url;
+                    }
+                    else if (response == -1) {
+                        $('.spinner').css('display', 'none');
+                        var url = '@Url.Action("Index", "Login")';
+                        window.location.href = url;
+                    }
+                    else {
+                        $('.spinner').css('display', 'none');
+                        $('#infoMessage').addClass('alert-danger');
+                        $('#infoMessage').text('No Skipped item found to pick');
+                        $('#infoMessage').stop();
+                        $('#infoMessage').slideDown();
+                        $('#infoMessage').delay(3000).slideUp("slow");
+                    }
+                },
+                failure: function (response) {
+                    //  alert(response.responseText);
+                    $('.spinner').css('display', 'none');
+                },
+                error: function (response) {
+                    //alert(response.responseText);
+                    $('.spinner').css('display', 'none');
+                }
+            });
+        });
+
+        $('#btnRePrint').on('click', function () {            
+            $('.spinner').css('display', 'block');
+            $.ajax({
+                type: "POST",
+                url: "/PickInventory/RePrint",
+                data: { serialNumber: $('#hdnNewSerialNumber').val(), workOrderID: $("#hdnWorkOrderID").val(), arinvtID: $("#hdnARINVT").val() },
+                cache: false,
+                success: function (response) {                    
+                    if (response == 1) {                       
+                        $('.spinner').css('display', 'none');
+                        $('#infoMessage').removeClass('alert-danger');
+                        $('#infoMessage').addClass('alert-success');
+                        $('#infoMessage').text('Successfully Reprint Master Label');
+                        $('#infoMessage').stop();
+                        $('#infoMessage').slideDown();
+                        $('#infoMessage').delay(3000).slideUp("slow");
+                    }
+                    else if (response == -1) {
+                        $('.spinner').css('display', 'none');
+                        var url = '@Url.Action("Index", "Login")';
+                        window.location.href = url;
+                    }
+                    else {
+                        $('.spinner').css('display', 'none');
+                        $('#infoMessage').addClass('alert-danger');
+                        $('#infoMessage').text('Could not successfully reprint the Master Label');                        
+                        $('#infoMessage').stop();
+                        $('#infoMessage').slideDown();
+                        $('#infoMessage').delay(3000).slideUp("slow");
+                    }
+                },
+                failure: function (response) {
+                    //  alert(response.responseText);
+                    $('.spinner').css('display', 'none');
+                },
+                error: function (response) {
+                    //alert(response.responseText);
+                    $('.spinner').css('display', 'none');
+                }
+            });
+        });
+
+
+        $('#btnNextItem').on('click', function () {            
+            
+            $('.spinner').css('display', 'block');
+
+            var parameters =
+            {                        
+                SerialNumber: $("#txtScanSerial").val(),
+                PickQuantity: eval($("#txtPickQty").val()),
+                WorkOrderID: eval($("#hdnWorkOrderID").val()),
+                ARINVT_ID: eval($("#hdnARINVT").val()),
+            }
+            $('.spinner').css('display', 'block');
+            $.ajax({
+                type: "POST",
+                url: "/PickInventory/NextItem",
+                data: { pickInventory: parameters },
+                cache: false,
+                success: function (response) {
+                    if (response.status == -1) {
+                        $('.spinner').css('display', 'none');
+                        var url = '@Url.Action("Index", "PickInventory")';
+                        window.location.href = url;
+                    }
+                    else if (response.status == 0) {
+                        $("#btnNextItem").css('display', 'none');
+                        $("#btnNextLocation").css('display', 'block');  
+                        $("#btnBack").css('display', 'block');
+                        $("#btnRePrint").css('display', 'none');
+                        $('#txtScanSerial').attr('readonly', 'readonly');
+                        $('.spinner').css('display', 'none');
+                        $('#infoMessage').removeClass('alert-danger');
+                        $('#infoMessage').removeClass('alert-success');
+                        $('#infoMessage').addClass('alert-info');
+                        $('#infoMessage').find('p').html(response.message);
+                        //$('#infoMessage').text('All items have been picked from Location ' + $("#location").val() + '. Go to the next location.');
+                        $('#infoMessage').stop();
+                        $('#infoMessage').slideDown();
+                        $('#infoMessage').delay(3000).slideUp("slow");
+                        $("#btnBack").css('display', 'block');
+                        
+                    }
+                    else if (response.status == 1) {
+                        $("#btnNextItem").css('display', 'none');
+                        $("#btnRePrint").css('display', 'none');
+                        $("#btnBack").css('display', 'block');
+                        $("#btnOK").css('display', 'block');
+                        $('.spinner').css('display', 'none');
+                        $('#txtScanSerial').attr('readonly', 'readonly');
+                        $('#infoMessage').removeClass('alert-danger');
+                        $('#infoMessage').removeClass('alert-success');
+                        $('#infoMessage').addClass('alert-info');
+                        $('#infoMessage').find('p').html(response.message);
+                        //$('#infoMessage').text('All items have been picked. Click Ok button to continue');
+                        $('#infoMessage').stop();
+                        $('#infoMessage').slideDown();
+                        $('#infoMessage').delay(5000).slideUp("slow");
+                        $("#btnBack").css('display', 'block');
+                        
+                    }
+                    else if (response.status == -2) {
+                       
+                        $('.spinner').css('display', 'none');
+                        var url = '@Url.Action("Index", "Login")';
+                        window.location.href = url;
+                    }
+                    else {
+                        $("#btnNextItem").css('display', 'block');
+                        $('.spinner').css('display', 'none');
+                        $('#infoMessage').addClass('alert-danger');
+                        $('#infoMessage').text('Please Scan Serial Number or Enter the Pick Quantity');
+                        $('#infoMessage').stop();
+                        $('#infoMessage').slideDown();
+                        $('#infoMessage').delay(3000).slideUp("slow");
+                    }
+                },
+                failure: function (response) {
+                    //  alert(response.responseText);
+                    $('.spinner').css('display', 'none');
+                },
+                error: function (response) {
+                    //alert(response.responseText);
+                    $('.spinner').css('display', 'none');
+                }
+            });
+            return false;            
+        });
+
+        $.validator.setDefaults({
+            submitHandler: function () {
+                $("#txtScanSerial").removeAttr('readonly');
+                var parameters =
+                {                        
+                    SerialNumber: $("#txtScanSerial").val(),
+                    PickQuantity: eval($("#txtPickQty").val()),
+                    WorkOrderID: eval($("#hdnWorkOrderID").val()),
+                    ARINVT_ID: eval($("#hdnARINVT").val()),
+                }
+                $('.spinner').css('display', 'block');
+                $.ajax({
+                    type: "POST",
+                    url: "/PickInventory/Next",
+                    data: { pickInventory: parameters },
+                    cache: false,
+                    success: function (response) {
+                        if (response == true) {
+                            $('.spinner').css('display', 'none');
+                            var url = '@Url.Action("Index", "PickInventory")';
+                            window.location.href = url;
+                        }
+                        else if (response == 0) {
+                            //$("#btnSaveNext").css('display', 'none');
+                            $("#btnNextLocation").css('display', 'block');                            
+                            $('.spinner').css('display', 'none');
+                            $('#infoMessage').addClass('alert-success');
+                            $('#infoMessage').text('Successfully picked Item');
+                            $('#infoMessage').stop();
+                            $('#infoMessage').slideDown();
+                            $('#infoMessage').delay(3000).slideUp("slow");
+                        }
+                        else if (response == 1) {
+                            //$("#btnSaveNext").css('display', 'none');
+                            $("#btnOK").css('display', 'block');
+                            $('.spinner').css('display', 'none');
+                            $('#infoMessage').addClass('alert-danger');
+                            $('#infoMessage').text('All Items Picked from Location All the Location. Click Ok button to continue');
+                            $('#infoMessage').stop();
+                            $('#infoMessage').slideDown();
+                            $('#infoMessage').delay(3000).slideUp("slow");
+                        }
+                        else {
+                            $('.spinner').css('display', 'none');
+                            $('#infoMessage').addClass('alert-danger');
+                            $('#infoMessage').text('Please Scan Serial Number or Enter the Pick Quantity');
+                            $('#infoMessage').stop();
+                            $('#infoMessage').slideDown();
+                            $('#infoMessage').delay(3000).slideUp("slow");
+                        }
+                    },
+                    failure: function (response) {
+                        //  alert(response.responseText);
+                        $('.spinner').css('display', 'none');
+                    },
+                    error: function (response) {
+                        //alert(response.responseText);
+                        $('.spinner').css('display', 'none');
+                    }
+                });
+            }
+        });
+    $('#PickInventoryForm').validate({
+            rules: {                    
+                SerialNumber: {
+                    required: true
+                },
+                PickQuantity: {
+                    required: true                        
+                },
+
+            },
+            messages: {                    
+                SerialNumber: {
+                    required: "Please select Serial Number"
+                },
+                PickQuantity: {
+                    required: "Please enter pick Quantity"                        
+                }
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.input-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+
+    });
+
+</script>
+

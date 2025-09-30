@@ -1,0 +1,15 @@
+--------------------------------------------------------------- Rossell WMS Start 09-30-2025 06:25:01-----------------------------------------------------------------
+MASTER LABEL ID : 16103
+SERIAL : 00016103
+ARINVT_ID : 148088
+SOURCE LOCATION : 20508
+SOURCE FGMULTI ID : 170477
+TARGET LOCATION : 20511
+IS REPACK : False
+
+Master Label ID : 16103
+
+Could not successfully called Inventory/TransactionLocation/MoveToLocationFromMasterLabel Web API 
+
+--------------------------------------------------------------- Rossell WMS End 09-30-2025 06:25:02-----------------------------------------------------------------
+

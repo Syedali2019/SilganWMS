@@ -1,0 +1,45 @@
+--------------------------------------------------------------- Rossell Kitting Material Start 11-02-2022 10:40:41-----------------------------------------------------------------
+RECORD_NO : 1/2
+WORKORDER_BOM_ID : 0
+WORKORDER_ID : 14830
+STANDARD_ID : 63961
+ARINVT_ID_FG : 204291
+ITEM_NO : 786T8707-0AC
+SNDOP_ID : 0
+ARINVT_ID_RM : 200356
+PTSPER : 0.33
+ITEMNO : RT204001200114
+DESCRIPTION : SHRINK SLEEVE 2:1 SZ 0.75 YEL
+DESCRIPTION2 : M23053/5-109-4
+REQ_QUANTITY : 0.33
+HARD_ALLOCATION : 0
+FGMULTI_ID : 195089
+LOC_ID : 30829
+LOC_DESC : C001A01
+
+Successfully called Inventory/Disposition/MasterLabelRepack Web API 
+
+Serial Number After Repack Web API : 000003428
+
+Successfully Updated the Master Label Quantity manually : 000003428
+
+Successfully adjusted the Master Label Quantity manually : 484
+
+Master Label ID After Repack Web API : 3428
+
+Successfully called Inventory/TransactionLocation/MoveToLocationFromMasterLabel Web API 
+
+Successfully called ARS_UTILS.DO_HARDALLOC Package
+
+Successfully called Labels/PrintLabel/ReprintSerial Web API
+
+Successfully Updated the Master Label Quantity manually After Reprint Serial Label Web API: 000003428
+
+Successfully adjusted the Master Label Quantity manually After Reprint Serial Label Web API: 484
+
+Successfully picked ARINVT_ID 200356 and WORKORDER_ID 14830
+
+JSON DATA : {"SEQ_ID":15.0,"UOM":"FT","LOC_ID":30829.0,"LOC_DESC":"C001A01","WORKORDER_BOM_ID":0,"WORKORDER_ID":14830,"STANDARD_ID":63961,"ARINVT_ID_FG":204291,"ITEM_NO":"786T8707-0AC","REL_QUANTITY":0.33,"SNDOP_ID":0,"ARINVT_ID_RM":200356,"PTSPER":0.33,"UNIT":"FT","ITEMNO":"RT204001200114","DESCRIPTION":"SHRINK SLEEVE 2:1 SZ 0.75 YEL","DESCRIPTION2":"M23053/5-109-4","REQ_QUANTITY":0.0,"HARD_ALLOCATION":0.33,"IS_PICKED":1.0,"IS_ERROR":0.0,"IS_SKIPPED":0.0,"ERROR_DESCRIPTION":"","MASTER_LABEL_ID":484.0,"NEW_MASTER_LABEL_ID":3428.0,"FGMULTI_ID":195089,"STAGING_LOCATIONS_ID":32681,"OPMAT_FACTOR":1.00}
+
+--------------------------------------------------------------- Rossell Kitting Material End 11-02-2022 10:40:48-----------------------------------------------------------------
+

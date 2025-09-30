@@ -1,0 +1,370 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content">
+    @model IEnumerable<Rossell.BusinessEntity.Printer>
+
+    <div class="card">
+        <form class="w-100 p-0" method="post" id="printerForm">
+            <div class="input-group">
+                <div class="alert font messagealert fixed-top" id="infoMessage" style="display: none;">
+                    <button type="button" class="close" data-dismiss="alert">x</button>
+                    <p></p>
+                </div>
+            </div>
+            <div class="card-header">
+                Printer List
+            </div>
+
+            <div class="card-body p-2">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="txtSearchPrinter" data-val="true" name="txtSearchPrinter" placeholder="Search Printer" />
+                </div>
+
+                <div class="custom-button-list list-group" id="myList" role="tablist">
+                    @foreach (var printer in Model)
+                    {
+                        <span class="button-checkbox">
+                            <button type="button" class="list-group-item list-group-item-action mb-2 rounded" data-color="primary" id="btn_@printer.PrinterName" name="btn_@printer.PrinterName" value="@Html.DisplayFor(modelItem => printer.PrinterName)">
+                                @Html.DisplayFor(modelItem => printer.PrinterName)
+                                @Html.CheckBox("chk", false, new { id = printer.PrinterName, @Value = printer.PrinterName, style = "display: none" })
+                            </button>
+                        </span>
+                    }
+                </div>
+            </div>
+            <div class="form-group d-flex justify-content-end mb-2 mr-2" id="bottomButton">
+                <input type="submit" id="btnSubmit" name="btnSubmit" value="Next" class="btn btn-secondary btn-sm text-right" />
+            </div>
+        </form>
+
+        <div class="spinner" style="display:none">
+            <div class="center-div">
+                <div class="inner-div">
+                    <div class="loader"></div>
+                </div>
+            </div>
+        </div>
+
+        @if (@Model.Count() <= 0)
+        {
+            <script type="text/javascript">
+                $('.spinner').css('display', 'none');
+                $('#btnSubmit').css('display', 'none');
+                $('#btnBack').css('display', 'block');
+                $('#infoMessage').addClass('alert-danger');
+                $('#infoMessage').text('No Printer found on search.');
+                $('#infoMessage').stop();
+                $('#infoMessage').slideDown();
+                $('#infoMessage').delay(3000).slideUp("slow");
+            </script>
+        }
+    </div>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            if ($(".card-body").height() > $(window).height()) {
+                $("#bottomButton").addClass('fixed-bottom');
+            }
+            else {
+                $("#bottomButton").removeClass('fixed-bottom');
+            }
+
+            $('.button-checkbox').each(function () {
+                // Settings
+                var $widget = $(this),
+                    $button = $widget.find('button'),
+                    $checkbox = $widget.find('input:checkbox'),
+                    $hidden = $widget.find('input:hidden'),
+                    color = $button.data('color'),
+                    settings = {
+                        on: {
+                            icon: ' fa fa-check-circle mr-2'
+                        },
+                        off: {
+                            icon: ' fa fa-check-circle mr-2 disabled'
+                        }
+                    };
+
+                // Event Handlers
+                $button.on('click', function () {
+
+                    $('.button-checkbox').each(function () {
+                        var $widget = $(this),
+                            $button = $widget.find('button'),
+                            $checkbox = $widget.find('input:checkbox');
+                        var isChecked = $checkbox.is(':checked');
+                        if (isChecked) {
+                            $checkbox.prop('checked', false);
+                            $button.data('state', (isChecked) ? "on" : "off");
+                            $button
+                                .removeClass('btn-' + color + ' active')
+                                .addClass('btn-default');
+                            $hidden.val(0);
+                            console.log(1);
+                        }
+                    });
+
+                    $checkbox.prop('checked', !$checkbox.is(':checked'));
+                    $checkbox.triggerHandler('change');
+                    updateDisplay();
+                });
+
+                $checkbox.on('change', function () {
+
+                });
+
+                // Actions
+                function updateDisplay() {
+                    var isChecked = $checkbox.is(':checked');
+
+                    // Set the button's state
+                    $button.data('state', (isChecked) ? "on" : "off");
+
+                    // Set the button's icon
+                    $button.find('.state-icon')
+                        .removeClass()
+                        .addClass('state-icon ' + settings[$button.data('state')].icon);
+
+                    // Update the button's color
+                    if (isChecked) {
+                        $button
+                            .removeClass('btn-default')
+                            .addClass('btn-' + color + ' active');
+                        $hidden.val($button.val());
+                    }
+                    else {
+                        $button
+                            .removeClass('btn-' + color + ' active')
+                            .addClass('btn-default');
+                        $hidden.val(0);
+                    }
+                }
+
+                // Initialization
+                function init() {
+                    updateDisplay();
+                    // Inject the icon if applicable
+                    if ($button.find('.state-icon').length == 0) {
+                        $button.prepend('<i class="state-icon' + settings[$button.data('state')].icon + '"></i> ');
+                    }
+                }
+                init();
+            });
+
+            $('#txtSearchPrinter').on('keydown', function (event) {
+                if (event.which == 13) {
+                    $('.spinner').css('display', 'block');
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/Printer/Search",
+                        data: { searchPrinter: $("#txtSearchPrinter").val() },
+                        cache: false,
+                        success: function (response) {
+                            $('.spinner').css('display', 'none');
+                            $("#myList").html("");
+
+                            var divison;
+                            for (var i in response) {
+                                divison = "<span class='button-checkbox'><button type='button' class='list-group-item list-group-item-action mb-2 rounded btn-default' data-color='primary' id='btn_'" + response[i].PrinterName + " name='btn_'" + response[i].PrinterName + "  value='" + response[i].PrinterName + "' aria-invalid='false'><i class='state-icon fa fa-check-circle mr-2 disabled'></i>&nbsp;" + response[i].PrinterName + "<input value='0' id='" + response[i].PrinterName + "' name='chk' style='display: none' type='checkbox'><input name='chk' type='hidden' value='0'></button></span>"
+                                $('#myList').append(divison);
+                            }
+
+                            $('.button-checkbox').each(function () {
+                                // Settings
+                                var $widget = $(this),
+                                    $button = $widget.find('button'),
+                                    $checkbox = $widget.find('input:checkbox'),
+                                    $hidden = $widget.find('input:hidden'),
+                                    color = $button.data('color'),
+                                    settings = {
+                                        on: {
+                                            icon: ' fa fa-check-circle mr-2'
+                                        },
+                                        off: {
+                                            icon: ' fa fa-check-circle mr-2 disabled'
+                                        }
+                                    };
+
+                                // Event Handlers
+                                $button.on('click', function () {
+
+                                    $('.button-checkbox').each(function () {
+                                        var $widget = $(this),
+                                            $button = $widget.find('button'),
+                                            $checkbox = $widget.find('input:checkbox');
+                                        var isChecked = $checkbox.is(':checked');
+                                        if (isChecked) {
+                                            $checkbox.prop('checked', false);
+                                            $button.data('state', (isChecked) ? "on" : "off");
+                                            $button
+                                                .removeClass('btn-' + color + ' active')
+                                                .addClass('btn-default');
+                                            $hidden.val(0);
+                                            console.log(1);
+                                        }
+                                    });
+
+                                    $checkbox.prop('checked', !$checkbox.is(':checked'));
+                                    $checkbox.triggerHandler('change');
+                                    updateDisplay();
+                                });
+
+                                $checkbox.on('change', function () {
+
+                                });
+
+                                // Actions
+                                function updateDisplay() {
+                                    var isChecked = $checkbox.is(':checked');
+
+                                    // Set the button's state
+                                    $button.data('state', (isChecked) ? "on" : "off");
+
+                                    // Set the button's icon
+                                    $button.find('.state-icon')
+                                        .removeClass()
+                                        .addClass('state-icon ' + settings[$button.data('state')].icon);
+
+                                    // Update the button's color
+                                    if (isChecked) {
+                                        $button
+                                            .removeClass('btn-default')
+                                            .addClass('btn-' + color + ' active');
+                                        $hidden.val($button.val());
+                                    }
+                                    else {
+                                        $button
+                                            .removeClass('btn-' + color + ' active')
+                                            .addClass('btn-default');
+                                        $hidden.val(0);
+                                    }
+                                }
+
+                                // Initialization
+                                function init() {
+                                    updateDisplay();
+                                    // Inject the icon if applicable
+                                    if ($button.find('.state-icon').length == 0) {
+                                        $button.prepend('<i class="state-icon' + settings[$button.data('state')].icon + '"></i> ');
+                                    }
+                                }
+                                init();
+                            });
+
+                            //if (response == 0) {
+                            //    //$("#btnSaveNext").css('display', 'block');
+                            //    $('.spinner').css('display', 'none');
+                            //}
+
+                            //if (response == 2) {
+                            //    $('.spinner').css('display', 'none');
+                            //    $('#infoMessage').text('Please enter printer name to search');
+                            //    //$("#btnSaveNext").css('display', 'block');
+                            //}
+                        },
+                        failure: function (response) {
+                            //  alert(response.responseText);
+                            $('.spinner').css('display', 'none');
+                        },
+                        error: function (response) {
+                            //alert(response.responseText);
+                            $('.spinner').css('display', 'none');
+                        }
+                    });
+                    return false;
+                }
+            });
+
+            $.validator.setDefaults({
+                submitHandler: function () {
+                    var printerArray = [];
+                    $('.button-checkbox').each(function () {
+                        var $widget = $(this),
+                            $checkbox = $widget.find('input:checkbox'),
+                            $hidden = $widget.find('input:hidden');
+                        var isChecked = $checkbox.is(':checked');
+                        if (isChecked) {
+                            printerArray.push($hidden.val());
+                        }
+                    });
+
+                    $('.spinner').css('display', 'block');
+                    $.ajax({
+                        type: "POST",
+                        url: "/Printer/Next",
+                        data: { printer: printerArray },
+                        cache: false,
+                        success: function (response) {
+                            if (response == 1) {
+                                var url = '@Url.Action("Index", "WMSOptionList")';
+                                window.location.href = url;
+                            }
+                            else {
+                                if (response == 0)
+                                {
+                                    $('.spinner').css('display', 'none');
+                                    $('#infoMessage').addClass('alert-danger');
+                                    $('#infoMessage').text('No items found to pick on selected WorkOrders');
+                                    $('#infoMessage').stop();
+                                    $('#infoMessage').slideDown();
+                                    $('#infoMessage').delay(3000).slideUp("slow");
+                                }
+                                if (response == 2) {
+                                    $('.spinner').css('display', 'none');
+                                    $('#infoMessage').addClass('alert-danger');
+                                    $('#infoMessage').text('Please select atleast one Printer');
+                                    $('#infoMessage').stop();
+                                    $('#infoMessage').slideDown();
+                                    $('#infoMessage').delay(3000).slideUp("slow");
+                                }
+                                if (response == -1) {
+                                    var url = '@Url.Action("Index", "Login")';
+                                    window.location.href = url;
+                                }
+                            }
+                        },
+                        failure: function (response) {
+                            //  alert(response.responseText);
+                            $('.spinner').css('display', 'none');
+                        },
+                        error: function (response) {
+                            //alert(response.responseText);
+                            $('.spinner').css('display', 'none');
+                        }
+                    });
+                }
+            });
+            $('#printerForm').validate({
+                rules: {
+                    "printerArray[]": {
+                        required: true,
+                        minlength: 1
+                    }
+                },
+                messages: {
+                    "printerArray[]": {
+                        required: "Please select Printer",
+                        minlength: "Please select Printer"
+                    }
+                },
+                errorElement: 'span',
+                errorPlacement: function (error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.input-group').append(error);
+                },
+                highlight: function (element, errorClass, validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
+                }
+            });
+        });
+    </script>
+
+</section>

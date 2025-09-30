@@ -1,0 +1,45 @@
+--------------------------------------------------------------- Rossell Kitting Material Start 11-04-2022 11:17:35-----------------------------------------------------------------
+RECORD_NO : 1/1
+WORKORDER_BOM_ID : 0
+WORKORDER_ID : 104746
+STANDARD_ID : 64027
+ARINVT_ID_FG : 199129
+ITEM_NO : HS5509-11-BBA3
+SNDOP_ID : 0
+ARINVT_ID_RM : 197056
+PTSPER : 27.166667
+ITEMNO : RT207013500020
+DESCRIPTION : TERMINAL LUG STR RING TONGUE CRIMP 12-10 AWG 8 -10STUD SZ INSULATED
+DESCRIPTION2 : YAV10Â€“H
+REQ_QUANTITY : 146
+HARD_ALLOCATION : 180
+FGMULTI_ID : 213345
+LOC_ID : 32686
+LOC_DESC : C001A05
+
+Successfully called Inventory/Disposition/MasterLabelRepack Web API 
+
+Serial Number After Repack Web API : 000003446
+
+Successfully Updated the Master Label Quantity manually : 000003446
+
+Successfully adjusted the Master Label Quantity manually : 3392
+
+Master Label ID After Repack Web API : 3446
+
+Successfully called Inventory/TransactionLocation/MoveToLocationFromMasterLabel Web API 
+
+Successfully called ARS_UTILS.DO_HARDALLOC Package
+
+Successfully called Labels/PrintLabel/ReprintSerial Web API
+
+Successfully Updated the Master Label Quantity manually After Reprint Serial Label Web API: 000003446
+
+Successfully adjusted the Master Label Quantity manually After Reprint Serial Label Web API: 3392
+
+Successfully picked ARINVT_ID 197056 and WORKORDER_ID 104746
+
+JSON DATA : {"SEQ_ID":1.0,"UOM":"FT","LOC_ID":32686.0,"LOC_DESC":"C001A05","WORKORDER_BOM_ID":0,"WORKORDER_ID":104746,"STANDARD_ID":64027,"ARINVT_ID_FG":199129,"ITEM_NO":"HS5509-11-BBA3","REL_QUANTITY":326.0,"SNDOP_ID":0,"ARINVT_ID_RM":197056,"PTSPER":27.166667,"UNIT":"IN","ITEMNO":"RT207013500020","DESCRIPTION":"TERMINAL LUG STR RING TONGUE CRIMP 12-10 AWG 8 -10STUD SZ INSULATED","DESCRIPTION2":"YAV10Â€“H","REQ_QUANTITY":145.66666666666666,"HARD_ALLOCATION":180.33333333333334,"IS_PICKED":0.0,"IS_ERROR":0.0,"IS_SKIPPED":1.0,"ERROR_DESCRIPTION":"","MASTER_LABEL_ID":3392.0,"NEW_MASTER_LABEL_ID":3446.0,"FGMULTI_ID":213345,"STAGING_LOCATIONS_ID":32681,"OPMAT_FACTOR":12.00}
+
+--------------------------------------------------------------- Rossell Kitting Material End 11-04-2022 11:17:40-----------------------------------------------------------------
+
