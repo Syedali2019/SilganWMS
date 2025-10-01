@@ -51,6 +51,12 @@
                                     <td><span><label id="lblLocation"></label><input type="hidden" id="hdnFGMULTIID" name="hdnFGMULTIID" value="0" /><input type="hidden" id="hdnLOTNO" name="hdnLOTNO" value="" /></span></td>
                                 </tr>
                                 <tr>
+                                    <th><span>Lot Number:</span></th>
+                                    <td>
+                                        <span><label id="lblLotNo"></label></span>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <th><span>Total Qty:</span></th>
                                     <td><span><label id="lblTotalQty"></label><input type="hidden" id="hdntotalQty" name="hdntotalQty" value="0" /><input type="hidden" id="hdnserialID" name="hdnserialID" value="0" /><input type="hidden" id="hdnNewSerialNumber" name="hdnNewSerialNumber" value="" /></span></td>
                                 </tr>
@@ -72,6 +78,7 @@
     </div>
     <div id="controlPanel" class="form-group" style="display:none;">
         <div class="form-group d-flex justify-content-end pt-2 mb-0">
+            <button id="btnNext" type="button" class="btn btn-secondary" style="display:none;">Back</button>&nbsp;&nbsp;&nbsp;
             <button id="btnMoveSerial" type="button" class="btn btn-secondary" style="display:none;">Move</button>
         </div>
     </div>
@@ -84,6 +91,7 @@
     </div>
 </div>
 <script src="~/assets/js/jquery.scannerdetection.js"></script>
+<script src="~/assets/js/sweetalert211.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
 
@@ -106,7 +114,7 @@
         $('#txtScanSerial').focus();
         //$('#txtScanSerial').select();
 
-        $('#txtScanSerial').on('keyup keypress', function (event) {
+        $('#txtScanSerial').on('keypress', function (event) {
             if ($('#hdnUseKeyboardOnScan').val() == 'Y') {
                 if (event.which == 13) {
 
@@ -141,6 +149,7 @@
                                 $('#lblLocation').text(response.label.LOCATION_DESC);                                
                                 $('#lblTotalQty').text(response.label.TOTAL_QUANTITY);
                                 $('#hdntotalQty').val(response.label.TOTAL_QUANTITY);
+                                $('#lblLotNo').text(response.label.LOT_NO);
                                 $('#hdnFGMULTIID').val(response.label.FGMULTI_ID);
                                 $('#hdnFGMULTIONHAND').val(response.label.FGMULTI_ONHAND);
                                 $('#hdnserialID').val(response.label.MASTER_LABEL_ID);
@@ -149,6 +158,8 @@
                                 $('#scanSerialNumber').hide();
                                 $('#directMoveSerialDetail').show();
                                 $('#directMoveSerialLoc').show();
+                                $('#btnNext').show();
+                                $('#controlPanel').show();
                                 if (parseInt($('#hdnLocationID').val()) > 0) {                                    
                                     $('#controlPanel').show();
                                     $('#btnMoveSerial').hide();
@@ -160,24 +171,29 @@
                             }
                             else {
                                 $('.spinner').css('display', 'none');
-                                $('#infoMessage').addClass('alert-danger');
+                                //$('#infoMessage').addClass('alert-danger');
                                 if (response.status == -1) {
                                     location.href = '/Login/Index/';
                                 }
 
                                 $('.spinner').css('display', 'none');
-                                $('#infoMessage').addClass('alert-danger');
+                                //$('#infoMessage').addClass('alert-danger');
                                 if (response.status == 1) {
-                                    $('#infoMessage').html(response.message);
+                                    Swal.fire({
+                                        icon: "error",
+                                        title: "Oops...",
+                                        text: response.message
+                                    });
+                                    //$('#infoMessage').html(response.message);
                                 }
 
                                 if (response.status == 3) {
                                     $('#infoMessage').text('Please enter a serial number');
                                     //$("#btnSaveNext").css('display', 'block');
                                 }
-                                $('#infoMessage').stop();
-                                $('#infoMessage').slideDown();
-                                $('#infoMessage').delay(3000).slideUp("slow");
+                                //$('#infoMessage').stop();
+                                //$('#infoMessage').slideDown();
+                                //$('#infoMessage').delay(3000).slideUp("slow");
 
                                 if (response.status == -3) {
                                     var url = '@Url.Action("Index", "Login")';
@@ -206,189 +222,18 @@
             if ($('#hdnUseKeyboardOnScan').val() == 'N') {
                 return false;
             }
-        });
+        });       
 
-        $('#btnScanSerial').on('click', function () {
-            $("#txtScanSerial").removeClass('is-invalid');
-                if ($("#txtScanSerial").val() == '') {
-                    $("#txtScanSerial").addClass('is-invalid');
-                    return false;
-                }
-
-                $('.spinner').css('display', 'block');
-                var snumber = $("#txtScanSerial").val();
-                snumber = snumber.replace('S', '');
-                snumber = snumber.replace('s', '');
-                $("#txtScanSerial").val(snumber);
-                $.ajax({
-                    type: "POST",
-                    url: "/DirectMoveSerial/Validate",
-                    data: { serialNumber: $("#txtScanSerial").val() },
-                    cache: false,
-                    success: function (response) {
-                        if (response.status == 0) {
-                            $('.spinner').css('display', 'none');
-                            $("#btnValidate").text('Validated');
-                            $("#btnValidate").attr('disabled', true);
-                            $("#btnValidate").removeClass('btn-primary');
-                            $("#btnValidate").addClass('btn-success');
-                            $('#txtScanSerial').attr('readonly', 'readonly');
-                            $('#txtPickQty').removeAttr('disabled');
-                            $('#lblSerial').text(response.label.SERIAL);
-                            $('#lblItemNo').text(response.label.ITEM_NO);
-                            $('#lblItemDescription').text(response.label.DESCRIPTION);
-                            $('#lblItemClass').text(response.label.CLASS);
-                            $('#lblItemUnit').text(response.label.UNIT);
-                            $('#lblItemRev').text(response.label.REV);
-                            $('#lblLocation').text(response.label.LOCATION_DESC);
-                            $('#lblLocationOnhand').text(response.label.FGMULTI_ONHAND);
-                            $('#lblTotalQty').text(response.label.TOTAL_QUANTITY);
-                            $('#hdntotalQty').val(response.label.TOTAL_QUANTITY);
-                            $('#hdnFGMULTIID').val(response.label.FGMULTI_ID);
-                            $('#hdnFGMULTIONHAND').val(response.label.FGMULTI_ONHAND);
-                            $('#hdnserialID').val(response.label.MASTER_LABEL_ID);
-                            $('#hdnARINVT_ID').val(response.label.ARINVT_ID);
-                            $('#scanSerialNumber').hide();
-                            $('#directMoveSerialDetail').show();
-                            $('#directMoveSerialQty').show();
-                            $('#txtScanQty').removeAttr('disabled');
-                            $('#txtScanQty').focus();
-                            //$('#txtScanQty').select();
-                        }
-                        else {
-                            $('.spinner').css('display', 'none');
-                            $('#infoMessage').addClass('alert-danger');
-                            if (response.status == -1) {
-                                location.href = '/Login/Index/';
-                            }
-
-                            $('.spinner').css('display', 'none');
-                            $('#infoMessage').addClass('alert-danger');
-                            if (response.status == 1) {
-                                $('#infoMessage').html(response.message);
-                            }
-
-                            if (response.status == 3) {
-                                $('#infoMessage').text('Please enter a serial number');
-                                //$("#btnSaveNext").css('display', 'block');
-                            }
-                            $('#infoMessage').stop();
-                            $('#infoMessage').slideDown();
-                            $('#infoMessage').delay(3000).slideUp("slow");
-
-                            if (response.status == -3) {
-                                var url = '@Url.Action("Index", "Login")';
-                                window.location.href = url;
-                            }
-                        }
-                    },
-                    failure: function (response) {
-                        //  alert(response.responseText);
-                        $('.spinner').css('display', 'none');
-                    },
-                    error: function (response) {
-                        //alert(response.responseText);
-                        $('.spinner').css('display', 'none');
-                    }
-                });
-                return false;
-
-        });
-        
-
-
-        $('#txtScanQty').on('keydown', function (event) {
-            if (event.which == 13) {
-
-                $("#txtScanQty").removeClass('is-invalid');
-                if ($("#txtScanQty").val() == '') {
-                    $("#txtScanQty").addClass('is-invalid');
-                    return false;
-                }
-
-                if ($.isNumeric($("#txtScanQty").val())) {
-                } else {
-                    $("#txtScanQty").addClass('is-invalid');
-                    $('#infoMessage').addClass('alert-danger');
-                    $('#infoMessage').text('Scan Qty should be number.');
-                    $('#infoMessage').stop();
-                    $('#infoMessage').slideDown();
-                    $('#infoMessage').delay(3000).slideUp("slow");
-                    return false;
-                }
-
-                $('.spinner').css('display', 'block');
-                var snumber = $("#txtScanQty").val();
-                snumber = snumber.replace('Q', '');
-                snumber = snumber.replace('q', '');
-                $("#txtScanQty").val(snumber);
-                var totQty = $("#hdntotalQty").val();
-
-                if (eval($("#txtScanQty").val()) <= 0) {
-                    $('.spinner').css('display', 'none');
-                    $('#infoMessage').addClass('alert-danger');
-                    $('#infoMessage').text('Scan Qty should be greater than 0.');
-                    $('#infoMessage').stop();
-                    $('#infoMessage').slideDown();
-                    $('#infoMessage').delay(3000).slideUp("slow");
-                    return false;
-                }
-
-                if (eval($("#txtScanQty").val()) > eval($("#hdntotalQty").val())) {
-                    $('.spinner').css('display', 'none');
-                    $('#infoMessage').addClass('alert-danger');
-                    $('#infoMessage').text('Scan Qty should be less than equal to Total Qty.');
-                    $('#infoMessage').stop();
-                    $('#infoMessage').slideDown();
-                    $('#infoMessage').delay(3000).slideUp("slow");
-                    return false;
-                }
-
-                if (eval($("#txtScanQty").val()) > eval($("#hdnFGMULTIONHAND").val())) {
-                    $('.spinner').css('display', 'none');
-                    $('#infoMessage').addClass('alert-danger');
-                    $('#infoMessage').text('Scan Qty should be less than equal to Location OnHand Qty.');
-                    $('#infoMessage').stop();
-                    $('#infoMessage').slideDown();
-                    $('#infoMessage').delay(3000).slideUp("slow");
-                    return false;
-                }
-
-                $('.spinner').css('display', 'none');
-                $('#txtScanQty').attr('disabled', 'disabled');
-
-                if (eval($("#txtScanQty").val()) < eval($("#hdntotalQty").val())) {
-                    $("#directMoveSerialRepack").show();
-                }
-                else {
-                    $('#txtTargetLoc').removeAttr('disabled');
-                    $("#directMoveSerialLoc").show();
-                    $('#txtTargetLoc').focus();
-                    //$('#txtTargetLoc').select();
-                    return false;
-                }
-            }
-        });
-
-        $('.rdpack').change(function () {
-            selected_value = $("input[name='rdRepack']:checked").val();
-            if (selected_value == "true" || selected_value == "false") {
-                $('input[type=radio][value="false"][name=rdRepack]').attr('disabled', 'disabled');
-                $('input[type=radio][value="true"][name=rdRepack]').attr('disabled', 'disabled');
-                $('#txtTargetLoc').removeAttr('disabled');
-                $("#directMoveSerialLoc").show();
-                $('#txtTargetLoc').focus();
-                $('#txtTargetLoc').select();
-                return false;
-            }
-        });
-
-        $('#txtTargetLoc').on('keydown', function (event) {
+        $('#txtTargetLoc').on('keypress', function (event) {
             if (event.which == 13) {
 
                 $("#txtTargetLoc").removeClass('is-invalid');
                 if ($("#txtTargetLoc").val() == '') {
                     $("#txtTargetLoc").addClass('is-invalid');
+
+                    $('#btnNext').show();
+                    $('#controlPanel').show();
+
                     return false;
                 }
 
@@ -404,33 +249,41 @@
                             $('.spinner').css('display', 'none');
                             $('#hdnLocationID').val(response.location.ID);
                             $('#txtTargetLoc').attr('disabled', 'disabled');
-                            $('#btnMoveSerial').hide();
-                            $('#btnRePrint').hide();
-                            $('#controlPanel').show();
+                            $('#btnMoveSerial').hide();                                                     
+                            $('#btnRePrint').hide();                            
                             $('#btnMoveSerial').trigger('click');
                         }
                         else
                         {
                             $('.spinner').css('display', 'none');
-                            $('#infoMessage').addClass('alert-danger');
+                            //$('#infoMessage').addClass('alert-danger');
 
                             if (response.status == -1) {
                                 location.href = '/Login/Index/';
                             }
 
                             if (response.status == 1) {
-                                $('#infoMessage').html(response.message);
+                                //$('#infoMessage').html(response.message);
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Oops...",
+                                    text: response.message
+                                });
                                 //$('#infoMessage').find('p').after('<div class="input-group"><input type="button" id="btnAddLocation" name="btnAddLocation" value="Add Location" class="btn btn-secondary btn-sm"></div>');
                                 //CallAddLocationButton($("#txtTargetLoc").val());
                             }
 
                             if (response.status == 3) {
-                                $('#infoMessage').text('Please enter a location');
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Oops...",
+                                    text: "Please enter a location"
+                                });
+                                //$('#infoMessage').text('Please enter a location');
                             }
-
-                            $('#infoMessage').stop();
-                            $('#infoMessage').slideDown();
-                            $('#infoMessage').delay(5000).slideUp("slow");
+                            //$('#infoMessage').stop();
+                            //$('#infoMessage').slideDown();
+                            //$('#infoMessage').delay(5000).slideUp("slow");
 
                             if (response.status == -3) {
                                 var url = '@Url.Action("Index", "Login")';
@@ -450,11 +303,6 @@
         });
 
         $('#btnMoveSerial').on('click', function () {
-
-            if ($('#directMoveSerialRepack').css('display') == 'none') {
-                $('input[type=radio][value="false"][name=rdRepack]').prop("checked", true);
-            }
-
             $('.spinner').css('display', 'block');
                      $.ajax({
                     type: "POST",
@@ -465,28 +313,33 @@
                         if (response.status == 0) {
                             $('.spinner').css('display', 'none');
                             $('#btnMoveSerial').hide();                           
-                            $('#infoMessage').removeClass('alert-danger');
-                            $('#infoMessage').removeClass('alert-info');
-                            $('#infoMessage').addClass('alert-success');
-                            $('#infoMessage').html(response.message);
-                            $('#infoMessage').stop();
-                            $('#infoMessage').slideDown();
-                            $('#infoMessage').delay(3000).slideUp("slow");
+                            //$('#infoMessage').removeClass('alert-danger');
+                            //$('#infoMessage').removeClass('alert-info');
+                            //$('#infoMessage').addClass('alert-success');
+                            //$('#infoMessage').html(response.message);
+                            //$('#infoMessage').stop();
+                            //$('#infoMessage').slideDown();
+                            //$('#infoMessage').delay(3000).slideUp("slow");
+                            Swal.fire({
+                                icon: "success",
+                                title: "Success",
+                                text: response.message
+                            });
                             $('#hdnNewSerialNumber').val(response.serial);
                             $('#lblTotalQty').text(eval($("#txtScanQty").val()));
                             $('#directMoveSerialDetail').hide();
                             $('#directMoveSerialLoc').hide();                            
                             $('#scanSerialNumber').show();                            
                             $('#txtScanSerial').removeAttr('readonly');
+                            $('#btnNext').hide();
                             $('#txtScanSerial').val('');
                             $('#txtScanSerial').focus();
                             //$('#txtScanSerial').select();
-
                         }
                         else
                         {
                             $('.spinner').css('display', 'none');
-                            $('#infoMessage').addClass('alert-danger');
+                            //$('#infoMessage').addClass('alert-danger');
 
                             if (response.status == -1) {
                                 location.href = '/Login/Index/';
@@ -498,12 +351,17 @@
                             }
 
                             if (response.status == 3) {
-                                $('#infoMessage').html(response.message);
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Oops...",
+                                    text: response.message
+                                });                                
                             }
+                            $('#btnNext').show();
 
-                            $('#infoMessage').stop();
-                            $('#infoMessage').slideDown();
-                            $('#infoMessage').delay(5000).slideUp("slow");
+                            //$('#infoMessage').stop();
+                            //$('#infoMessage').slideDown();
+                            //$('#infoMessage').delay(5000).slideUp("slow");
 
                             if (response.status == -3) {
                                 var url = '@Url.Action("Index", "Login")';
@@ -519,115 +377,10 @@
                     }
                 });
         });
-
 
         $('#btnNext').on('click', function () {
-            var url = '@Url.Action("Index", "DirectMoveSerial")';
+            var url = '@Url.Action("Move", "DirectMoveSerial")';
             window.location.href = url;
         });
-
-        $('#btnRePrint').on('click', function () {
-            $('.spinner').css('display', 'block');
-            $.ajax({
-                type: "POST",
-                url: "/DirectMoveSerial/RePrint",
-                data: { serialNumber: $('#hdnNewSerialNumber').val()},
-                cache: false,
-                success: function (response) {
-                    if (response == 1) {
-                        $('.spinner').css('display', 'none');
-                        $('#infoMessage').removeClass('alert-danger');
-                        $('#infoMessage').addClass('alert-success');
-                        $('#infoMessage').text('Successfully Reprint Master Label');
-                        $('#infoMessage').stop();
-                        $('#infoMessage').slideDown();
-                        $('#infoMessage').delay(3000).slideUp("slow");
-                    }
-                    else if (response == -1) {
-                        $('.spinner').css('display', 'none');
-                        var url = '@Url.Action("Index", "Login")';
-                        window.location.href = url;
-                    }
-                    else {
-                        $('.spinner').css('display', 'none');
-                        $('#infoMessage').addClass('alert-danger');
-                        $('#infoMessage').text('Could not successfully reprint the Master Label');
-                        $('#infoMessage').stop();
-                        $('#infoMessage').slideDown();
-                        $('#infoMessage').delay(3000).slideUp("slow");
-                    }
-                },
-                failure: function (response) {
-                    //  alert(response.responseText);
-                    $('.spinner').css('display', 'none');
-                },
-                error: function (response) {
-                    //alert(response.responseText);
-                    $('.spinner').css('display', 'none');
-                }
-            });
-        });
-
     });
-
-     function CallAddLocationButton(locationName)
-        {
-            $('#btnAddLocation').on('click', function () {
-                $('.spinner').css('display', 'block');
-                     $.ajax({
-                    type: "POST",
-                    url: "/DirectMoveSerial/AddLocation",
-                         data: { locationName: $("#txtTargetLoc").val(), arinvtID: eval($('#hdnARINVT_ID').val()), serialNumber: $("#lblSerial").text()},
-                    cache: false,
-                    success: function (response) {
-                        if (response.status == 0) {
-                            $('.spinner').css('display', 'none');
-                            $('#infoMessage').removeClass('alert-danger');
-                            $('#infoMessage').addClass('alert-success');
-                            $('#infoMessage').html(response.message);
-                            $('#infoMessage').stop();
-                            $('#infoMessage').slideDown();
-                            $('#infoMessage').delay(3000).slideUp("slow");
-                            $('#hdnLocationID').val(response.ID);
-                            $('#txtTargetLoc').attr('disabled', 'disabled');
-                            $('#btnMoveSerial').hide();
-                            $('#controlPanel').show();
-                        }
-                        else
-                        {
-                            $('.spinner').css('display', 'none');
-                            $('#infoMessage').addClass('alert-danger');
-
-                            if (response.status == -1) {
-                                location.href = '/Login/Index/';
-                            }
-
-                            if (response.status == 1) {
-                                $('#infoMessage').html(response.message);
-                                $('#infoMessage').find('p').after('<div class="input-group"><input type="button" id="btnAddLocation" name="btnAddLocation" value="Add Location" class="btn btn-secondary btn-sm"></div>');
-                         }
-
-                            if (response.status == 3) {
-                                $('#infoMessage').text('Please enter a location');
-                            }
-
-                            $('#infoMessage').stop();
-                            $('#infoMessage').slideDown();
-                            $('#infoMessage').delay(5000).slideUp("slow");
-
-                            if (response.status == -3) {
-                                var url = '@Url.Action("Index", "Login")';
-                                window.location.href = url;
-                            }
-                        }
-                    },
-                    failure: function (response) {
-                        $('.spinner').css('display', 'none');
-                    },
-                    error: function (response) {
-                        $('.spinner').css('display', 'none');
-                    }
-                });
-            });
-        }
 </script>

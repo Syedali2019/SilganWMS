@@ -6,7 +6,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>D:\Projects\SilganDispensingWMS_Deployment\30-SEPTEMBER_2025</_PublishTargetUrl>
+    <_PublishTargetUrl>D:\Projects\SilganDispensingWMS_Deployment\01-OCTOBER_2025</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
     <File Include="assets/bootstrap/css/bootstrap.min.css">
@@ -447,6 +447,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="assets/js/popper.min.js">
       <publishTime>08/04/2023 18:21:41</publishTime>
     </File>
+    <File Include="assets/js/sweetalert211.js">
+      <publishTime>10/01/2025 19:01:21</publishTime>
+    </File>
     <File Include="bin/EntLibContrib.Data.Oracle.ManagedDataAccess.dll">
       <publishTime>05/18/2020 01:12:05</publishTime>
     </File>
@@ -613,19 +616,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>05/18/2020 01:12:05</publishTime>
     </File>
     <File Include="bin/Rossell.BusinessEntity.dll">
-      <publishTime>09/30/2025 21:38:59</publishTime>
+      <publishTime>10/01/2025 20:40:01</publishTime>
     </File>
     <File Include="bin/Rossell.BusinessEntity.pdb">
-      <publishTime>09/30/2025 21:38:59</publishTime>
+      <publishTime>10/01/2025 20:40:01</publishTime>
     </File>
     <File Include="bin/Rossell.BusinessLogic.dll">
-      <publishTime>09/30/2025 21:39:00</publishTime>
+      <publishTime>10/01/2025 20:40:02</publishTime>
     </File>
     <File Include="bin/Rossell.BusinessLogic.dll.config">
       <publishTime>07/07/2020 19:23:43</publishTime>
     </File>
     <File Include="bin/Rossell.BusinessLogic.pdb">
-      <publishTime>09/30/2025 21:39:00</publishTime>
+      <publishTime>10/01/2025 20:40:02</publishTime>
     </File>
     <File Include="bin/Rossell.Common.dll">
       <publishTime>09/29/2025 19:56:07</publishTime>
@@ -634,19 +637,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/29/2025 19:56:07</publishTime>
     </File>
     <File Include="bin/Rossell.DataLogic.dll">
-      <publishTime>09/30/2025 21:39:00</publishTime>
+      <publishTime>10/01/2025 20:40:02</publishTime>
     </File>
     <File Include="bin/Rossell.DataLogic.dll.config">
       <publishTime>05/18/2020 01:12:04</publishTime>
     </File>
     <File Include="bin/Rossell.DataLogic.pdb">
-      <publishTime>09/30/2025 21:39:00</publishTime>
+      <publishTime>10/01/2025 20:40:02</publishTime>
     </File>
     <File Include="bin/Rossell.WMS.dll">
-      <publishTime>09/30/2025 21:39:00</publishTime>
+      <publishTime>10/01/2025 20:40:02</publishTime>
     </File>
     <File Include="bin/Rossell.WMS.pdb">
-      <publishTime>09/30/2025 21:39:00</publishTime>
+      <publishTime>10/01/2025 20:40:02</publishTime>
     </File>
     <File Include="bin/System.Web.Helpers.dll">
       <publishTime>05/18/2020 01:12:05</publishTime>
@@ -673,7 +676,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/26/2024 14:48:38</publishTime>
     </File>
     <File Include="Views/DirectMoveSerial/Move.cshtml">
-      <publishTime>09/29/2025 21:10:16</publishTime>
+      <publishTime>10/01/2025 20:32:51</publishTime>
     </File>
     <File Include="Views/DirectMoveWO/Index.cshtml">
       <publishTime>01/26/2024 14:50:18</publishTime>
@@ -697,7 +700,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/05/2023 16:05:14</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>09/30/2025 21:39:01</publishTime>
+      <publishTime>10/01/2025 20:40:03</publishTime>
     </File>
   </ItemGroup>
 </Project>

@@ -14,4 +14,11 @@ namespace Rossell.BusinessEntity
         public object ModelState { get; set; }
 
     }
+    public class ServiceMessage
+    {
+        public string FriendlyMessage { get; set; }
+        public string ExceptionMessage { get; set; }
+        public string StackTrace { get; set; }
+        public string ErrorCode { get; set; }
+    }
 }

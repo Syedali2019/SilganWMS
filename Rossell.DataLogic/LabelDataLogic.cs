@@ -458,7 +458,7 @@ namespace Rossell.DataLogic
                 LOT_DESC = reader["LOTNO"] == DBNull.Value ? string.Empty : Convert.ToString(reader["LOTNO"]),
                 FGMULTI_ONHAND = reader["ONHAND"] == DBNull.Value ? 0 : Convert.ToDecimal(reader["ONHAND"]),
                 DISPO_DATE = reader["DISPO_DATE"] == DBNull.Value ? string.Empty : Convert.ToString(reader["DISPO_DATE"]),
-                LOT_NO = reader["FG_LOTNO"] == DBNull.Value ? string.Empty : Convert.ToString(reader["FG_LOTNO"])
+                LOT_NO = reader["LOTNO"] == DBNull.Value ? string.Empty : Convert.ToString(reader["LOTNO"])
             };
             return label;
         }

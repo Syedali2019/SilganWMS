@@ -170,25 +170,14 @@ namespace Rossell.WMS.Controllers
                                 }
 
                                 locationFGMUTI = locationBL.GetLocation(locationName, arinvtID, label.LOT_DESC);
-                                //if (locationFGMUTI == null)
-                                //{
-                                //    using (ServiceBusinessLogic serviceBL = new ServiceBusinessLogic())
-                                //    {
-                                //        serviceBL.AddLocation(label.ARINVT_ID, location.ID, label.LOT_DESC);
-                                //    }
-                                //}
-                                //locationFGMUTI = locationBL.GetLocation(locationName, arinvtID, label.LOT_DESC);
-                                if(locationFGMUTI == null)
+                                if (locationFGMUTI == null)
                                 {
-                                    jsonData = new
+                                    using (ServiceBusinessLogic serviceBL = new ServiceBusinessLogic())
                                     {
-                                        location = new object(),
-                                        status = 1,
-                                        message = "The scanned location doesn't exists FGMULTI.<p></p>"
-                                    };
-                                    return Json(jsonData);
+                                        serviceBL.AddLocation(label.ARINVT_ID, location.ID, label.LOT_DESC);
+                                    }
                                 }
-
+                                locationFGMUTI = locationBL.GetLocation(locationName, arinvtID, label.LOT_DESC);
                                 jsonData = new
                                 {
                                     location = locationFGMUTI,
@@ -333,6 +322,7 @@ namespace Rossell.WMS.Controllers
         public ActionResult MoveSerial(string serial, long serialID, decimal scanQty, long locationID, bool isRepack, long fgmultiID, string sourceLocation, string targetLocation, long arinvtID, string lotNo)
         {
             Object jsonData = null;
+            WebApiResponse webAPIResponse = new WebApiResponse();
             if (Session["Users"] != null)
             {
                 string newSerialNumber = string.Empty;
@@ -344,7 +334,7 @@ namespace Rossell.WMS.Controllers
 
                     if (serial != null && !serial.ToString().Equals(""))
                     {
-                        rossellLog.MessageLog("--------------------------------------------------------------- Rossell WMS Start " + DateTime.Now.ToString("MM-dd-yyyy hh:mm:ss") + "-----------------------------------------------------------------");
+                        rossellLog.MessageLog("--------------------------------------------------------------- SilganDispensing WMS Start " + DateTime.Now.ToString("MM-dd-yyyy hh:mm:ss") + "-----------------------------------------------------------------");
                         rossellLog.MessageLog("MASTER LABEL ID : " + serialID.ToString());
                         rossellLog.MessageLog("SERIAL : " + serial.ToString());
                         rossellLog.MessageLog("ARINVT_ID : " + arinvtID.ToString());
@@ -397,18 +387,6 @@ namespace Rossell.WMS.Controllers
                                 }
                                 else
                                 {
-                                    BusinessEntity.Location location;
-                                    using (ItemLocationBusinessLogic locationBL = new ItemLocationBusinessLogic())
-                                    {
-                                        location = locationBL.GetLocation(targetLocation, arinvtID, lotNo);
-                                        if (location != null)
-                                        {
-                                            using (LabelBusinessLogic labelBL = new LabelBusinessLogic())
-                                            {
-                                                labelBL.UpdateMasterLabel(serial, scanQty, location.FGMULI_ID, location.LocationName);
-                                            }
-                                        }
-                                    }
                                     newSerialNumber = serial;
                                 }
                             }                            
@@ -438,9 +416,18 @@ namespace Rossell.WMS.Controllers
                                 
                                 using (ServiceBusinessLogic services = new ServiceBusinessLogic())
                                 {
-                                    isMoved = services.MoveToLocation(arinvtID, fgmultiID, location.FGMULI_ID, scanQty, masterLabel);
-                                    if (isMoved)
+                                    webAPIResponse = services.MoveToLocation(arinvtID, fgmultiID, location.FGMULI_ID, scanQty, masterLabel);
+                                    if (webAPIResponse.DidSucceed)
                                     {
+                                        location = locationBL.GetLocation(targetLocation, arinvtID, lotNo);
+                                        if (location != null)
+                                        {
+                                            using (LabelBusinessLogic labelBL = new LabelBusinessLogic())
+                                            {
+                                                labelBL.UpdateMasterLabel(serial, scanQty, location.FGMULI_ID, location.LocationName);
+                                            }
+                                        }
+
                                         using (TransLogBusinessLogic transLogBL = new TransLogBusinessLogic())
                                         {
                                             TransLog transLog = transLogBL.GetTransLogData(arinvtID, location.FGMULI_ID);
@@ -454,12 +441,25 @@ namespace Rossell.WMS.Controllers
                                                 }                                                
                                             }
                                         }
-
+                                        jsonData = new
+                                        {
+                                            label = new object(),
+                                            status = 0,
+                                            serial = newSerialNumber,
+                                            message = "Successfully moved the serial #" + serial + " into Location # " + targetLocation
+                                        };
                                         rossellLog.MessageLog("Successfully called Inventory/TransactionLocation/MoveToLocationFromMasterLabel Web API ");
                                         rossellLog.MessageLog("");
                                     }
                                     else
                                     {
+                                        jsonData = new
+                                        {
+                                            label = new object(),
+                                            status = 3,
+                                            serial = newSerialNumber,
+                                            message = "Couldn't successfully moved the serial #" + serial + " into Location # " + targetLocation + " due to following issue \n" + webAPIResponse.Message
+                                        };
                                         rossellLog.MessageLog("Could not successfully called Inventory/TransactionLocation/MoveToLocationFromMasterLabel Web API ");
                                         rossellLog.MessageLog("");
                                     }
@@ -472,16 +472,8 @@ namespace Rossell.WMS.Controllers
                             rossellLog.MessageLog("");
                         }                        
 
-                        rossellLog.MessageLog("--------------------------------------------------------------- Rossell WMS End " + DateTime.Now.ToString("MM-dd-yyyy hh:mm:ss") + "-----------------------------------------------------------------");
+                        rossellLog.MessageLog("--------------------------------------------------------------- SilganDispensing WMS End " + DateTime.Now.ToString("MM-dd-yyyy hh:mm:ss") + "-----------------------------------------------------------------");
                         rossellLog.MessageLog("");
-
-                        jsonData = new
-                        {
-                            label = new object(),
-                            status = 0,
-                            serial = newSerialNumber,
-                            message = "Successfully moved the serial #" + serial + " into Location # " + targetLocation
-                        };
                         return Json(jsonData);
                     }
                     else

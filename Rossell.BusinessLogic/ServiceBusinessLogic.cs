@@ -217,8 +217,9 @@ namespace Rossell.BusinessLogic
             }
         }
 
-        public bool MoveToLocation(long arINVTID, long sourceFgMultiId, long targetFgMultiId, decimal quantity, BusinessEntity.MasterLabel masterLabel)
+        public WebApiResponse MoveToLocation(long arINVTID, long sourceFgMultiId, long targetFgMultiId, decimal quantity, BusinessEntity.MasterLabel masterLabel)
         {
+            WebApiResponse webAPIResponse = new WebApiResponse();
             long fgMultiID = 0;
             var response = new HttpResponseMessage();
             try
@@ -249,19 +250,31 @@ namespace Rossell.BusinessLogic
                 formData.Add(DictionaryItems, "InventoryMasterLabel");                
                 response = Task.Run(() => _httpClient.PostAsync($"{baseUrl}{urlAddInLocation}{endpoint}", formData)).Result;
                 string json = response.Content.ReadAsStringAsync().Result;
+
                 if (response.IsSuccessStatusCode)
                 {
-                    return true;
+                    webAPIResponse.DidSucceed = true;
+                    webAPIResponse.Message = "";
+                    webAPIResponse.Status = true;
                 }
                 else
                 {
-                    return false;
+                    string error = response.Content.ReadAsStringAsync().Result;
+                    json = json.Replace("data", "webApiResponse");
+                    RootObjectResponseError obj = JsonConvert.DeserializeObject<RootObjectResponseError>(json);
+
+                    webAPIResponse.DidSucceed = false;
+                    webAPIResponse.Message = obj.iqmsServiceError.FriendlyMessage;
+                    webAPIResponse.Status = false;
                 }
-                return true;
+                return webAPIResponse;
             }
             catch (Exception ex)
             {
-                return false;
+                webAPIResponse.DidSucceed = false;
+                webAPIResponse.Message = ex.Message;
+                webAPIResponse.Status = false;
+                return webAPIResponse;
             }
         }
 
@@ -724,5 +737,10 @@ namespace Rossell.BusinessLogic
     public class RootObjectPrinter
     {
         public List<Printer> Printer { get; set; }
+    }
+
+    public class RootObjectResponseError
+    {
+        public ServiceMessage iqmsServiceError { get; set; }
     }
 }
