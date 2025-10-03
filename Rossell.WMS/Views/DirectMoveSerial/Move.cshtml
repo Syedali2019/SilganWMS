@@ -313,18 +313,18 @@
                         if (response.status == 0) {
                             $('.spinner').css('display', 'none');
                             $('#btnMoveSerial').hide();                           
-                            //$('#infoMessage').removeClass('alert-danger');
-                            //$('#infoMessage').removeClass('alert-info');
-                            //$('#infoMessage').addClass('alert-success');
-                            //$('#infoMessage').html(response.message);
-                            //$('#infoMessage').stop();
-                            //$('#infoMessage').slideDown();
-                            //$('#infoMessage').delay(3000).slideUp("slow");
-                            Swal.fire({
-                                icon: "success",
-                                title: "Success",
-                                text: response.message
-                            });
+                            $('#infoMessage').removeClass('alert-danger');
+                            $('#infoMessage').removeClass('alert-info');
+                            $('#infoMessage').addClass('alert-success');
+                            $('#infoMessage').html(response.message);
+                            $('#infoMessage').stop();
+                            $('#infoMessage').slideDown();
+                            $('#infoMessage').delay(3000).slideUp("slow");
+                            //Swal.fire({
+                            //    icon: "success",
+                            //    title: "Success",
+                            //    text: response.message
+                            //});
                             $('#hdnNewSerialNumber').val(response.serial);
                             $('#lblTotalQty').text(eval($("#txtScanQty").val()));
                             $('#directMoveSerialDetail').hide();
@@ -339,7 +339,7 @@
                         else
                         {
                             $('.spinner').css('display', 'none');
-                            //$('#infoMessage').addClass('alert-danger');
+                            $('#infoMessage').addClass('alert-danger');
 
                             if (response.status == -1) {
                                 location.href = '/Login/Index/';
@@ -351,17 +351,18 @@
                             }
 
                             if (response.status == 3) {
-                                Swal.fire({
-                                    icon: "error",
-                                    title: "Oops...",
-                                    text: response.message
-                                });                                
+                                $('#infoMessage').html(response.message);
+                                //Swal.fire({
+                                //    icon: "error",
+                                //    title: "Oops...",
+                                //    text: response.message
+                                //});                                
                             }
                             $('#btnNext').show();
 
-                            //$('#infoMessage').stop();
-                            //$('#infoMessage').slideDown();
-                            //$('#infoMessage').delay(5000).slideUp("slow");
+                            $('#infoMessage').stop();
+                            $('#infoMessage').slideDown();
+                            $('#infoMessage').delay(5000).slideUp("slow");
 
                             if (response.status == -3) {
                                 var url = '@Url.Action("Index", "Login")';
